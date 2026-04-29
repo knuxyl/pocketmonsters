@@ -1,0 +1,7 @@
+typedef enum {
+	CURSOR_POINTER,
+	CURSOR_HAND,
+	CURSOR_CLOSE,
+	CURSOR_INFO,
+	CURSOR
+} Cursor;

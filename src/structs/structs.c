@@ -1,0 +1,8 @@
+#include "data.c"
+#include "themes.c"
+#include "cards.c"
+#include "config.c"
+#include "player.c"
+#include "battle.c"
+#include "input.c"
+#include "ui.c"

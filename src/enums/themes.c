@@ -1,0 +1,7 @@
+typedef enum {
+	LIGHT_THEME,
+	DARK_THEME,
+	GB_LIGHT_THEME,
+	GB_DARK_THEME,
+	THEME
+} Theme;

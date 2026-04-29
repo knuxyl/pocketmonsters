@@ -1,0 +1,16 @@
+/external/
+/data/
+/build/
+/images/
+/push.sh
+/src/data/cards/hires/
+/backup/
+/pmcg
+*_ttf.c
+*_png.c
+*_gbs.c
+*_svg.c
+/testing
+/remove_tracking.sh
+/notes.txt
+/.git/

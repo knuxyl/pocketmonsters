@@ -1,0 +1,21 @@
+#define USING_VERSION_SDL3
+#ifdef PMCG_SOFTWARE
+	#define RLSW_IMPLEMENTATION
+#endif
+#include "raylib.h"
+#include "cbor.h"
+#include "gme/gme.h"
+#include "gcrypt.h"
+#include "sodium.h"
+#include "zint.h"
+#include "ZXing/ZXingC.h"
+#include "SDL3/SDL.h"
+#include "SDL3/SDL_main.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include <stdint.h>
+#include <regex.h>
+#include <string.h>
+#include <stdbool.h>
+#include <time.h>
