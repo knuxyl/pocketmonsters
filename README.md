@@ -1,7 +1,7 @@
 # Pocket Monters Card Game
 # ポケットモンスターカードゲーム
 
-![Alt text](https://gitlab.com/knuxyl/pmcg/-/raw/master/screenshot.png "Screenshot")
+![Alt text](https://github.com/knuxyl/pocketmonsters/blob/master/screenshot.png?raw=true "Screenshot")
 *probably not current*
 
 # Current progress
@@ -30,7 +30,7 @@ I started my project on March 22 and another project with almost the same goals 
 - https://github.com/APINKSHRIMP/Pokemon-TCG-Legacy
 
 # Building
-- See [BUILDING.MD](https://gitlab.com/knuxyl/pmcg/BUILDING.MD)
+- See [BUILDING.MD](https://github.com/knuxyl/pocketmonsters/blob/master/BUILDING.MD)
 
 # TODO
 - Save data design
@@ -88,6 +88,7 @@ I started my project on March 22 and another project with almost the same goals 
 - Embedded assets + option to load high resolution
 - Touch/Keyboard+Mouse/Controller support
 - All assets embedded in binary
+- Possibility for making this also a regular pokemon game as well in the future
 
 # Game Features
 - 2D tilemaps like the original games
