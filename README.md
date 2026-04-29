@@ -4,79 +4,112 @@
 ![Alt text](https://github.com/knuxyl/pocketmonsters/blob/master/screenshot.png?raw=true "Screenshot")
 *probably not current*
 
-# Current progress
-- Still very early, this is my first C project
-- Linux only but using cross platform libraries, just need cmake configuration for other platforms (windows, mac?, hopefully android)
-	- I only have linux systems so this will be a while unless someone contributes
-- Database design (will need to further test in battle later)
-	- All base set cards are viewable by pressing c and cycling through up and down with keyboard or controller
-- Controller support
-	- Supports background input and up to 10 controllers
-- Game audio support
-	- All Pokemon GBC/GB game audio embedded and playable
-	- "Original" audio format, infinite loop playback, tiny file size
-	- There is something wrong with the buffer, I have no idea idea what. It sometimes messes up or something
-- Color theme support
-- Responsive design
-- All pokemon names + translations
-- Most future required libraries are being built and linked
-	- Things like data serialization for saving, generating qrcodes, encryption, etc
-	- I have yet to start even thinking about networking
-- Statically linked
+# Current information
+- Still very early, this is my first C project.
+- Title menu
+	- Press C to see Base Set cards
+		- Press Left/Right to cycle through cards
+		- Terminal output shows card information (only Alakazam atm, was copied)
+	- Press N/M to cycle through game audio
+		- Press ,/. to cycle through songs
+	- Click/select options to change language
+- Most testing goes in src/test/test.c
 
 # Notable competing project
-I started my project on March 22 and another project with almost the same goals started the day prior. I found out about it looking up information to get my project going. Very suspicious coincidence. His project uses Godot so will have much more rapid development and quick cross platform releases.
+This project uses Godot so will have much more rapid development and quick cross platform releases.
 - Pokemon TCG Legacy
 - https://github.com/APINKSHRIMP/Pokemon-TCG-Legacy
 
 # Building
 - See [BUILDING.MD](https://github.com/knuxyl/pocketmonsters/blob/master/BUILDING.MD)
 
-# TODO
-- Save data design
-	- Waiting on starting map to know what data is to be stored
-- Encryption design
-	- I can generate keys but still deciding on what and where to encrypt
-- Game Assets
-	- English & Japanese Cards
-	- I have a 300 MB Inkscape SVG for designing packs, I can't decide which design but it can be done in bulk in a day with how much progress I've made
-	- Script to automatically format cards for game (WIP, looks great now but I keep changing my mind)
-		- The script automatically pulls 8 pixels from various points around the border of cropped cards, averages them out, and generates a rounded border
-		- Automatically resizes and limits colorspace and then optimizes with oxi-png so cards can be embedded
-		- Generates all the c files for including
-- Playable on a Raspberry Pi 2 and a Google Pixel (1)
-	- I have yet to figure out how to build for android, this is for future
-	- My arm64 system is complaining about not being able to initialize video device... It's a rock 5b on gentoo mainline linux, it should work.
-- Tilemaps/Tilesets - haven't started
-	- I can't seem to find a good 16x16 colored tileset for feudal Japan...
-	- Will be using tiled
-- Battling - haven't started
-- Story Mode - haven't started
+# Progress
+- [x] Controller and Mouse + Keyboard support
+	- Supports up to 10 connected controllers
+	- Background input (when window isn't focused, will be a option)
+	- All controllers control game, no seperate player 1 and player 2
+- [ ] User interface
+	- [x] Menus
+	- [ ] Boxed dialogue/questions
+	- [ ] Onscreen Keyboard
+		- Only English and Japanese (no Kanji)
+- [x] Multilingual support
+	- English, Japanese, German, French, Spanish, Italian, Korean, Chinese Simplified, and Chinese
+	- Noto font used for each language.
+- [ ] Themes
+	- [x] Color schemes and custom mouse cursor
+	- [ ] More custom mouse cursors
+- [x] Responsive
+	- Scales, positions, and aligns correctly on all aspect ratios
+- [ ] Game sound/music
+	- Working 95% of the time but something's wrong with the audio buffer. The current system is not stable enough.
+	- Reripped gbs from the Japanese games because all sources online were corrupted and missing songs/sounds.
+	- [x] Loads original GBC/GB music
+- [ ] Options menu
+- [ ] Data serialization
+- [ ] Encryption and signatures
+- [ ] Tilemap drawing
+- [ ] Player Save Data
+- [ ] Saving and Loading
+	- [ ] Save game data
+	- [ ] High resolution textures
+- [ ] Expand UI to support boxed text, dialogues, etc
+- [ ] Card battle scene
+- [ ] Card database
+	- Initial work has been done
+	- [ ] International
+		- [ ] Wizards of the Coast
+			- [ ] Base Set
+			- [ ] Base Set 2
+			- [ ] Fossil
+			- [ ] Jungle
+			- [ ] Team Rocket
+			- [ ] Gym Heroes
+			- [ ] Gym Challenge
+- [ ] Card Assets
+	- I have a script for cleaning up cropped cards (gamma, rounded border, etc) but japanese cards are a pain because the borders aren't one color
+- [ ] Story
+- [ ] Offline trade and duel
+	- [ ] QR Code generation
+	- [ ] Wifi networking
+- [ ] Static linking
+	- [ ] Linux
+		- I need to build against musl to get rid of anything that's left. Everything else is static
+	- [ ] Windows
+	- [ ] Mac
+	- [ ] Android
+	- I have no idea what to do about platforms other than Linux with this.
+- [ ] Cross platform (x86_64 & arm64)
+	- [x] Linux
+	- [ ] Windows
+	- [ ] Mac
+	- [ ] Android
+	- No other platform is planned
+- [ ] Translations
+	- [x] Pokemon Names
+	- [ ] Dialogue
+	- [ ] Cards
+	- [ ] User interface
+- [ ] Networking/Server play
 
 # Primary libraries
-- raylib (game engine)
-- sdl3 (backend for raylib)
-- libgcrypt (serpent encryption)
-- libsodium (x25519 assymetric key exchange)
-- libcbor (data serialization)
-- libgme (GBC & GB music player)
-- zint (barcode encoding)
-- zxing (barcode decoding)
+- [raylib](https://github.com/raysan5/raylib) (game engine)
+- [sdl3](https://github.com/libsdl-org/SDL) (backend for raylib)
+- [libgcrypt](https://github.com/gpg/libgcrypt) (serpent encryption)
+- [libsodium](https://github.com/jedisct1/libsodium) (x25519 assymetric key exchange)
+- [libcbor](https://github.com/PJK/libcbor) (data serialization)
+- [libgme](https://github.com/libgme/game-music-emu) (GBC & GB music player)
+- [zint](https://github.com/zint/zint) (barcode encoding)
+- [zxing](https://github.com/zxing/zxing) (barcode decoding)
 - networking (TODO)
 ### Other static linked libraries
-- libusb
-- libhidapi
-- libflac
-- libogg, libopus, libopusfile
-- libdrm (linux only)
-### Linux libraries dynamically linked
-- Most of these will be statically linked once I move the project to an Alpine machine
-- linux-vdso
-- libstdc++
-- libm
-- libc
-- ld-linux-x86-64
-- libgcc_s
+- [libusb](https://github.com/libusb/libusb)
+- [libhidapi](https://github.com/libusb/hidapi)
+- [libflac](https://github.com/xiph/flac)
+- [libogg](https://github.com/gcp/libogg)
+- [libopus](https://github.com/xiph/opus)
+- [libopusfile](https://github.com/xiph/opusfile)
+- [libdrm](https://gitlab.freedesktop.org/mesa/drm)
 
 # Engine Features
 - Written in C
