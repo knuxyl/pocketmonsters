@@ -1,7 +1,7 @@
 # Pocket Monters Card Game
 # ポケットモンスターカードゲーム
 
-![Alt text](https://github.com/knuxyl/pocketmonsters/blob/master/screenshot.png?raw=true "Screenshot")
+![Alt text](https://github.com/knuxyl/pocketmonsters/blob/master/images/screenshot.png?raw=true "Screenshot")
 *probably not current*
 
 # Current information
@@ -111,6 +111,8 @@ This project uses Godot so will have much more rapid development and quick cross
 - [libopusfile](https://github.com/xiph/opusfile)
 - [libdrm](https://gitlab.freedesktop.org/mesa/drm)
 
+![Alt text](https://github.com/knuxyl/pocketmonsters/blob/master/images/boosters.png?raw=true "Original Series Boosters")
+
 # Engine Features
 - Written in C
 - Cmake build system
@@ -139,6 +141,8 @@ This project uses Godot so will have much more rapid development and quick cross
 - Trading via Data Matrix or QRCodes (android only)
 	- I think Data Matrix is actually more compact than QRCodes and each individual card stores a lot of data
 	- This was the driving idea behind the entire game
+	
+![Alt text](https://github.com/knuxyl/pocketmonsters/blob/master/images/cards/bs.gif?raw=true "Base Set")![Alt text](https://github.com/knuxyl/pocketmonsters/blob/master/images/cards/ju.gif?raw=true "Jungle")![Alt text](https://github.com/knuxyl/pocketmonsters/blob/master/images/cards/fo.gif?raw=true "Fossil")![Alt text](https://github.com/knuxyl/pocketmonsters/blob/master/images/cards/bs2.gif?raw=true "Base Set 2")![Alt text](https://github.com/knuxyl/pocketmonsters/blob/master/images/cards/tr.gif?raw=true "Team Rocket")![Alt text](https://github.com/knuxyl/pocketmonsters/blob/master/images/cards/gh.gif?raw=true "Gym Heroes")![Alt text](https://github.com/knuxyl/pocketmonsters/blob/master/images/cards/gc.gif?raw=true "Gym Challenge")
 
 # Server play
 - Server can configure whether to allow cards from other servers (server signed) / offline play (player signed), independently. Can create a list of accepted public keys/uuids for acceptance.
