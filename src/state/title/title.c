@@ -21,6 +21,8 @@ static struct ui_child exit_child = {.type = UI_MENU_TEXT, .click = exit_game, .
 struct ui_element titlemenu_element = {.index = UI_NOSELECTION, .py = 0.5f, .child_pgap = 0.04f, .padding_pb = 0.1f, .padding_pt = 0.05f, .ph = 0.5f, .align_x = UI_CENTER, .align_y = UI_CENTER, .child_count = 5, .children = {&continue_child, &newgame_child, &network_child, &options_child, &exit_child}};
 struct ui_element pushstart_element = {.py = 0.65f, .ph = 0.35f, .align_x = UI_CENTER, .align_y = UI_TOP, .child_count = 1, .children = {&pushstart_child}};
 struct ui_element logo_element = {.ph = 0.5f, .padding_pt = 0.15f, .align_x = UI_CENTER, .align_y = UI_CENTER, .child_count = 1, .children = {&logo_child}};
+// not used like a regular element
+static struct onscreen_keyboard onscreen_keyboard;
 static float pushstart_timer;
 static struct ui_child* current_element;
 static Image background_image;
@@ -64,6 +66,7 @@ void update_title() {
 	} else if (state == 1) {
 		update_element(&titlemenu_element);
 	}
+	update_keyboard(&onscreen_keyboard);
 }
 
 void loop_title() {
@@ -111,6 +114,10 @@ void loop_title() {
 		}
 	}
 	//onscreen_keyboard();
+	if (is_pressed(INPUT_SELECT)) {
+		
+	}
+	draw_keyboard(&onscreen_keyboard);
 }
 
 void init_title() {
@@ -124,6 +131,7 @@ void init_title() {
 	play_music(MUSIC_TITLE);
 	loop_state = loop_title;
 	update_state = update_title;
+	onscreen_keyboard.page = 0;
 	update_state();
 }
 

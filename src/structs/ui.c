@@ -1,3 +1,16 @@
+struct onscreen_keyboard {
+	float height;
+	float width;
+	float key_height;
+	float key_width;
+	float key_padding;
+	float x;
+	float y;
+	uint8_t page;
+	Font font;
+};
+
+
 struct ui_child {
 	uint8_t type; // UI_TEXT, UI_IMAGE, UI_MENU
 	union {

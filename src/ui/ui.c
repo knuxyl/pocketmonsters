@@ -7,23 +7,66 @@ void reset_element(struct ui_element* element) {
 	}
 }
 
-void onscreen_keyboard() {
-	float keyboard_height = window.height * 0.5f;
-	float keyboard_y = keyboard_height;
-	float keyboard_padding = keyboard_height * 0.01f;
-	float max_keyboard_width = window.width;
-	float key_size = (keyboard_height - (keyboard_padding * 6)) / 5;
-	float keyboard_width = (key_size * 10) + (keyboard_padding * 11);
-	if (keyboard_width > max_keyboard_width) {
-		keyboard_width = max_keyboard_width;
-		keyboard_padding = keyboard_width * 0.01f;
-		key_size = (keyboard_width - (keyboard_padding * 11)) / 10;
-		keyboard_height = (key_size * 5) + (keyboard_padding * 6);
-		keyboard_y = window.height - keyboard_height;
+void draw_keyboard(struct onscreen_keyboard* osk) {
+	DrawRectangle(osk->x, osk->y, osk->width, osk->height, WHITE);
+	for (uint8_t y = 0; y < 4; y++) {
+		for (uint8_t x = 0; x < strlen(keyboards[config.language]->symbols[osk->page][y]); x++) {
+			float start_x = osk->x + (osk->key_width * x);
+			float start_y = osk->y + (osk->key_height * y) + (osk->key_padding * (y+1));
+			char letter[2];
+			letter[0] = keyboards[config.language]->symbols[osk->page][y][x];
+			letter[1] = '\0';
+			Vector2 char_size = MeasureTextEx(osk->font, letter, osk->key_height, 0.0f);
+			float letter_x = start_x + ((osk->key_width - char_size.x) / 2);
+			float letter_y = start_y + ((osk->key_height - char_size.y) / 2);
+			DrawTextEx(osk->font, letter, (Vector2) {letter_x, letter_y}, osk->key_height, 0.0f, BLACK);
+		}
 	}
-	float keyboard_x = (window.width / 2) - (keyboard_width / 2);
-	DrawRectangle(keyboard_x, keyboard_y, keyboard_width, keyboard_height, WHITE);
+}
 
+void update_keyboard(struct onscreen_keyboard* osk) {
+	osk->key_width = window.width / 10;
+	osk->key_padding = (window.height / 2) * 0.025f;
+	osk->key_height = ((window.height / 2) - (osk->key_padding * 6)) / 5;
+	printf("OWidth: %f, OHeight: %f\n", osk->key_width, osk->key_height);
+	osk->font = load_font(osk->key_height);
+	char largest_char[2];
+	largest_char[1] = '\0';
+	float current_width = 0;
+	float largest_width = 0;
+	for (uint8_t p = 0; p < keyboards[config.language]->pages; p++) {
+		for (uint8_t y = 0; y < 4; y++) {
+			for (uint8_t x = 0; x < strlen(keyboards[config.language]->symbols[p][y]); x++) {
+				char current_char[2];
+				current_char[0] = keyboards[config.language]->symbols[p][y][x];
+				current_char[1] = '\0';
+				current_width = MeasureTextEx(osk->font, current_char, osk->key_height, 0.0f).x;
+				if (current_width > largest_width) {
+					largest_width = current_width;
+					largest_char[0] = current_char[0];
+					printf("Found largest: %i\n", largest_width);
+				}
+			}
+		}
+	}
+	osk->width = largest_width * 10;
+	printf("Largest: %f, Total: %f\n", largest_width, osk->width);
+	while (osk->width > window.width) {
+		printf("Decreasing %f\n", osk->key_height);
+		osk->key_height--;
+		largest_width = MeasureTextEx(osk->font, largest_char, osk->key_height, 0.0f).x;
+		osk->width = largest_width * 10;
+	}
+	osk->key_width = largest_width;
+	osk->height = osk->key_height * 5;
+	osk->key_padding = osk->height * 0.025f;
+	osk->height = osk->height + (osk->key_padding * 6);
+	osk->width = largest_width * 10;
+	//osk->key_height = max_key_height;
+	//osk->key_width = current_width;
+	osk->x = (window.width / 2) - (osk->width / 2);
+	osk->y = window.height - osk->height;
+	printf("Width: %f, Height: %f\n", osk->width, osk->height);
 }
 
 void input_element(struct ui_element* element) {
