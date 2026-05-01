@@ -1,3 +1,13 @@
+struct key {
+	Vector2 key;
+	Vector2 box;
+	Vector2 box_size;
+	Vector2 key_size;
+	int codepoint;
+	bool hover;
+	bool clicked;
+};
+
 struct onscreen_keyboard {
 	float height;
 	float width;
@@ -7,6 +17,9 @@ struct onscreen_keyboard {
 	float x;
 	float y;
 	uint8_t page;
+	struct key keys[40];
+	struct key submit;
+	uint8_t language;
 	Font font;
 };
 

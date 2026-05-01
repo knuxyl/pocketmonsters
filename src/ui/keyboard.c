@@ -8,8 +8,15 @@ struct keyboard {
 
 struct keyboard keyboard_en = {
 	.symbols = {
-		{"1234567890", "abcdefghij", "klmnopqrst", "uvwxyz,.-="},
-		{"!@#$%^&*()", "ABCDEFGHIJ", "KLMNOPQRST", "UVWXYZ<>_+"},
+		{"abcdefghij", "klmnopqrst", "uvwxyz,.-=", "1234567890"},
+		{"ABCDEFGHIJ", "KLMNOPQRST", "UVWXYZ<>_+", "!@#$%^&*()"},
+	},
+	.x = 0, .y = 0, .pages = 2,
+};
+struct keyboard keyboard_jp = {
+	.symbols = {
+		{"あいうえおかきくけこ", "さしすせそたちつてと", "なにぬねのはひふへほ", "1234567890"},
+		{"まみむめもや𛀆ゆ𛀁よ", "らりるれろわゐKゑを", "UVWXYZ<>_+", "!@#$%^&*()"},
 	},
 	.x = 0, .y = 0, .pages = 2,
 };
@@ -19,5 +26,5 @@ struct keyboard keyboard_en = {
 
 struct keyboard* keyboards[LANGUAGE] = {
 	[ENGLISH] = &keyboard_en,
-	[JAPANESE] = &keyboard_en,
+	[JAPANESE] = &keyboard_jp,
 };

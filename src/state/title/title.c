@@ -117,6 +117,7 @@ void loop_title() {
 	if (is_pressed(INPUT_SELECT)) {
 		
 	}
+	input_keyboard(&onscreen_keyboard);
 	draw_keyboard(&onscreen_keyboard);
 }
 

@@ -171,6 +171,12 @@ void loop_test() {
         } else {
             test_language++;
         };
+        if (config.language + 1 >= LANGUAGE) {
+            config.language = 0;
+        } else {
+            config.language++;
+        };
+        printf("Changed language: %i\n", config.language);
         print_card_info();
 	};
 	if (IsKeyReleased(KEY_N)) {

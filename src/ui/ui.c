@@ -7,19 +7,31 @@ void reset_element(struct ui_element* element) {
 	}
 }
 
+
+
 void draw_keyboard(struct onscreen_keyboard* osk) {
-	DrawRectangle(osk->x, osk->y, osk->width, osk->height, WHITE);
+	DrawRectangle(0, 0, window.width, window.height, (Color) {0,0,0,128});
 	for (uint8_t y = 0; y < 4; y++) {
-		for (uint8_t x = 0; x < strlen(keyboards[config.language]->symbols[osk->page][y]); x++) {
-			float start_x = osk->x + (osk->key_width * x);
-			float start_y = osk->y + (osk->key_height * y) + (osk->key_padding * (y+1));
-			char letter[2];
-			letter[0] = keyboards[config.language]->symbols[osk->page][y][x];
-			letter[1] = '\0';
-			Vector2 char_size = MeasureTextEx(osk->font, letter, osk->key_height, 0.0f);
-			float letter_x = start_x + ((osk->key_width - char_size.x) / 2);
-			float letter_y = start_y + ((osk->key_height - char_size.y) / 2);
-			DrawTextEx(osk->font, letter, (Vector2) {letter_x, letter_y}, osk->key_height, 0.0f, BLACK);
+		const char *str = keyboards[osk->language]->symbols[osk->page][y];
+		for (int i = 0, x = 0; str[i] != '\0' && x < 10; x++) {
+			uint16_t number = (uint16_t)((y * 10) + x);
+			// this is a stupid way of getting advance index but it works, hopefully ill find better
+			int advance = 0;
+			int codepoint = GetCodepoint(&keyboards[osk->language]->symbols[osk->page][y][i], &advance);
+			if (osk->keys[number].clicked) {
+				DrawRectangleRounded((Rectangle) {osk->keys[number].box.x, osk->keys[number].box.y, osk->key_width - ((window.height * 0.001f) * 2), osk->key_height - ((window.height * 0.001f) * 2)}, 0.5, 256, config.theme->background);
+				DrawRectangleRoundedLinesEx((Rectangle) {osk->keys[number].box.x, osk->keys[number].box.y, osk->key_width - ((window.height * 0.001f) * 2), osk->key_height - ((window.height * 0.001f) * 2)}, 0.5, 256, window.height * 0.001f, config.theme->text);
+				DrawTextCodepoint(osk->font, osk->keys[number].codepoint, osk->keys[number].key, osk->key_height, config.theme->text);
+			} else if (osk->keys[number].hover) {
+				DrawRectangleRounded((Rectangle) {osk->keys[number].box.x, osk->keys[number].box.y, osk->key_width - ((window.height * 0.001f) * 2), osk->key_height - ((window.height * 0.001f) * 2)}, 0.5, 256, config.theme->text);
+				DrawRectangleRoundedLinesEx((Rectangle) {osk->keys[number].box.x, osk->keys[number].box.y, osk->key_width - ((window.height * 0.001f) * 2), osk->key_height - ((window.height * 0.001f) * 2)}, 0.5, 256, window.height * 0.001f, config.theme->background);
+				DrawTextCodepoint(osk->font, osk->keys[number].codepoint, osk->keys[number].key, osk->key_height, config.theme->background);
+			} else {
+				DrawRectangleRounded((Rectangle) {osk->keys[number].box.x, osk->keys[number].box.y, osk->key_width - ((window.height * 0.001f) * 2), osk->key_height - ((window.height * 0.001f) * 2)}, 0.5, 256, config.theme->background);
+				DrawRectangleRoundedLinesEx((Rectangle) {osk->keys[number].box.x, osk->keys[number].box.y, osk->key_width - ((window.height * 0.001f) * 2), osk->key_height - ((window.height * 0.001f) * 2)}, 0.5, 256, window.height * 0.001f, config.theme->text);
+				DrawTextCodepoint(osk->font, osk->keys[number].codepoint, osk->keys[number].key, osk->key_height, config.theme->text);
+			}
+			i += advance;
 		}
 	}
 }
@@ -27,47 +39,90 @@ void draw_keyboard(struct onscreen_keyboard* osk) {
 void update_keyboard(struct onscreen_keyboard* osk) {
 	osk->key_width = window.width / 10;
 	osk->key_padding = (window.height / 2) * 0.025f;
-	osk->key_height = ((window.height / 2) - (osk->key_padding * 6)) / 5;
-	printf("OWidth: %f, OHeight: %f\n", osk->key_width, osk->key_height);
-	osk->font = load_font(osk->key_height);
-	char largest_char[2];
-	largest_char[1] = '\0';
-	float current_width = 0;
+	osk->key_height = ((window.height / 2) - (osk->key_padding * 7)) / 6;
+	uint8_t language;
+	if (keyboards[config.language] == NULL) {
+		osk->language = ENGLISH;
+	} else {
+		osk->language = config.language;
+	}
+	if (IsFontValid(osk->font)) {
+		UnloadFont(osk->font);
+	}
+	osk->font = load_font(osk->key_height, osk->language);
+	int largest_char = 0;
 	float largest_width = 0;
-	for (uint8_t p = 0; p < keyboards[config.language]->pages; p++) {
+	for (uint8_t p = 0; p < keyboards[osk->language]->pages; p++) {
 		for (uint8_t y = 0; y < 4; y++) {
-			for (uint8_t x = 0; x < strlen(keyboards[config.language]->symbols[p][y]); x++) {
-				char current_char[2];
-				current_char[0] = keyboards[config.language]->symbols[p][y][x];
-				current_char[1] = '\0';
-				current_width = MeasureTextEx(osk->font, current_char, osk->key_height, 0.0f).x;
+			const char *str = keyboards[osk->language]->symbols[p][y];
+			for (int i = 0, x = 0; str[i] != '\0' && x < 10; x++) {
+				uint16_t number = (uint16_t)((y * 10) + x);
+				int advance = 0;
+				osk->keys[number].codepoint = GetCodepoint(&keyboards[osk->language]->symbols[p][y][i], &advance);
+				float current_width = MeasureTextCodepoints(osk->font, &osk->keys[number].codepoint, 1, osk->key_height, 0.0f).x;
 				if (current_width > largest_width) {
 					largest_width = current_width;
-					largest_char[0] = current_char[0];
-					printf("Found largest: %i\n", largest_width);
+					largest_char = osk->keys[number].codepoint;
 				}
+				i += advance;
 			}
 		}
 	}
 	osk->width = largest_width * 10;
-	printf("Largest: %f, Total: %f\n", largest_width, osk->width);
 	while (osk->width > window.width) {
-		printf("Decreasing %f\n", osk->key_height);
 		osk->key_height--;
-		largest_width = MeasureTextEx(osk->font, largest_char, osk->key_height, 0.0f).x;
+		largest_width = MeasureTextCodepoints(osk->font, &largest_char, 1, osk->key_height, 0.0f).x;
 		osk->width = largest_width * 10;
 	}
 	osk->key_width = largest_width;
-	osk->height = osk->key_height * 5;
+	osk->height = osk->key_height * 6;
 	osk->key_padding = osk->height * 0.025f;
-	osk->height = osk->height + (osk->key_padding * 6);
+	osk->height = osk->height + (osk->key_padding * 7);
 	osk->width = largest_width * 10;
-	//osk->key_height = max_key_height;
-	//osk->key_width = current_width;
 	osk->x = (window.width / 2) - (osk->width / 2);
 	osk->y = window.height - osk->height;
-	printf("Width: %f, Height: %f\n", osk->width, osk->height);
+	for (uint8_t y = 0; y < 4; y++) {
+		const char *str = keyboards[osk->language]->symbols[osk->page][y];
+		for (int i = 0, x = 0; str[i] != '\0' && x < 10; x++) {
+			uint16_t number = (uint16_t)((y * 10) + x);
+			int advance = 0;
+			osk->keys[number].codepoint = GetCodepoint(&keyboards[osk->language]->symbols[osk->page][y][i], &advance);
+			osk->keys[number].key_size = MeasureTextCodepoints(osk->font, &osk->keys[number].codepoint, 1, osk->key_height, 0.0f);
+			osk->keys[number].box.x = osk->x + (osk->key_width * x);
+			osk->keys[number].box.y = osk->y + (osk->key_height * (y + 1)) + (osk->key_padding * (y + 1));
+			osk->keys[number].key.x = osk->keys[number].box.x + (osk->key_width / 2) - (osk->keys[number].key_size.x / 2);
+			osk->keys[number].key.y = osk->keys[number].box.y + (osk->key_height / 2) - (osk->keys[number].key_size.y / 2);
+			i += advance;
+		}
+	}
 }
+
+
+void input_keyboard(struct onscreen_keyboard* osk) {
+	if (is_pressed(INPUT_Y)) {
+		if (osk->page + 1 >= keyboards[osk->language]->pages) {
+			osk->page = 0;
+		} else {
+			osk->page++;
+		}
+		update_keyboard(osk);
+	}
+	for (uint16_t i = 0; i < 40; i++) {
+		if (mouse_x > osk->keys[i].box.x &&
+			mouse_x < osk->keys[i].box.x + osk->key_width &&
+			mouse_y > osk->keys[i].box.y &&
+			mouse_y < osk->keys[i].box.y + osk->key_height) {
+			if (!osk->keys[i].hover) {
+				osk->keys[i].hover = true;
+			}
+		} else {
+			if (osk->keys[i].hover) {
+				osk->keys[i].hover = false;
+			}
+		}
+	}
+}
+
 
 void input_element(struct ui_element* element) {
 	if (element->v == UI_ACTIVE) {
@@ -270,7 +325,7 @@ void update_element(struct ui_element* element) {
 		int child_h = element->child_h;
 		element->child_h = (int)roundf((element->h - (element->child_gap * (element->child_count - 1))) / element->child_count);
 		if (!IsFontValid(element->font)) {
-			element->font = load_font(element->child_h);
+			element->font = load_font(element->child_h, config.language);
 		}
 		for (uint8_t i = 0; i < element->child_count; i++) {
 			if (element->children[i]->type == UI_TEXT || element->children[i]->type == UI_MENU_TEXT) {
@@ -302,7 +357,7 @@ void update_element(struct ui_element* element) {
 				unload_font(element->font);
 			}
 			element->language = config.language;
-			element->font = load_font(element->child_h);
+			element->font = load_font(element->child_h, config.language);
 		}
 		
 		// Positioning

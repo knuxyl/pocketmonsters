@@ -1,6 +1,6 @@
 const char* codepoints[LANGUAGE] = {
-	[ENGLISH] = " !#$%&'()*+,-.0123456789:<=>@ABCDEFGHIJKLMNOPQRSTUVWXYZ^_abcdefghijklmnopqrstuvwxyzé◆●☆♀♂✧けつばん🟊",
-	[JAPANESE] = "!#$%&()*+,-.0123456789<=>@ABCDEFGHIJKLMNOPQRSTUVWXYZ^_abcdefghijklmnopqrstuvwxyz♀♂きけすつばんァアィイウェエォオカガキギクグケゲコゴサザシジスズセゼソゾタダチヂッツヅテデトドナニヌネノハバパヒビピフブプヘベペホボポマミムメモャヤュユョヨラリルレロワヲンヴ・ー了押新終続２：Ｚ",
+	[ENGLISH] = " !#$%&'()*+,-.0123456789:<=>@ABCDEFGHIJKLMNOPQRSTUVWXYZ^_abcdefghijklmnopqrstuvwxyzé←↑↵◆●☆♀♂✖✧🟊",
+	[JAPANESE] = "!#$%&()*+,-.0123456789<=>@ABCDEFGHIJKLMNOPQRSTUVWXYZ^_abcdefghijklmnopqrstuvwxyz←↑↵♀♂✖あいうえおかきくけこさしすせそたちつてとなにぬねのはばひふへほまみむめもやゆよらりるれろわゐゑをんァアィイウェエォオカガキギクグケゲコゴサザシジスズセゼソゾタダチヂッツヅテデトドナニヌネノハバパヒビピフブプヘベペホボポマミムメモャヤュユョヨラリルレロワヲンヴ・ー了押新終続２：Ｚ𛀁𛀆𛄟",
 	[GERMAN] = " -.123456:ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzßäéü♀♂",
 	[FRENCH] = " -.0123456:ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzÉâçèéêïô♀♂",
 	[ITALIAN] = " -.123456ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzé’♀♂",
