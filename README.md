@@ -32,7 +32,7 @@ This project uses Godot so will have much more rapid development and quick cross
 	- [x] Menus
 	- [ ] Boxed dialogue/questions
 	- [ ] Onscreen Keyboard
-		- Only English and Japanese (no Kanji)
+		- English only
 - [x] Multilingual support
 	- English, Japanese, German, French, Spanish, Italian, Korean, Chinese Simplified, and Chinese
 	- Noto font used for each language.
