@@ -13,6 +13,8 @@
 	- Press N/M to cycle through game audio
 		- Press ,/. to cycle through songs
 	- Click/select options to change language
+	- Press \ to open/close on screen keyboard
+		- Press s to cycle through pages
 - Most testing goes in src/test/test.c
 
 # Notable competing project
@@ -32,7 +34,7 @@ This project uses Godot so will have much more rapid development and quick cross
 	- [x] Menus
 	- [ ] Boxed dialogue/questions
 	- [ ] Onscreen Keyboard
-		- English only
+		- English + Japanese (No Kanji)
 - [x] Multilingual support
 	- English, Japanese, German, French, Spanish, Italian, Korean, Chinese Simplified, and Chinese
 	- Noto font used for each language.

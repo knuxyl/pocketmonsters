@@ -15,10 +15,14 @@ struct keyboard keyboard_en = {
 };
 struct keyboard keyboard_jp = {
 	.symbols = {
-		{"あいうえおかきくけこ", "さしすせそたちつてと", "なにぬねのはひふへほ", "1234567890"},
-		{"まみむめもや𛀆ゆ𛀁よ", "らりるれろわゐKゑを", "UVWXYZ<>_+", "!@#$%^&*()"},
+		{"abcdefghij", "klmnopqrst", "uvwxyz,.-=", "1234567890"},
+		{"ABCDEFGHIJ", "KLMNOPQRST", "UVWXYZ。゜_+", "!@#$%^&*¥ー"},
+		{"あぁいぃうぅえぇおぉ", "かきくけこさしすせそ", "たちつてとなにぬねの", "はひふへほまみむめも"},
+		{"やゃゆゅよょらりるれ", "ろわをんっがぎぐげご", "ざじずぜぞだぢづでど", "ばびぶべぼぱぴぷぺぽ"},
+		{"アァイィウゥエェオォ", "カキクケコサシスセソ", "タチツテトナニヌネノ", "ハヒフヘホマミムメモ"},
+		{"ヤャユュヨョラリルレ", "ロワヲンッガギグゲゴ", "ザジズゼゾダヂヅデド", "バビブベボパピプペポ"}
 	},
-	.x = 0, .y = 0, .pages = 2,
+	.x = 0, .y = 0, .pages = 6,
 };
 
 // fin hell i have no idea how to layout japanese with hiragana and katakana
@@ -27,4 +31,11 @@ struct keyboard keyboard_jp = {
 struct keyboard* keyboards[LANGUAGE] = {
 	[ENGLISH] = &keyboard_en,
 	[JAPANESE] = &keyboard_jp,
+	[GERMAN] = &keyboard_en,
+	[FRENCH] = &keyboard_en,
+	[ITALIAN] = &keyboard_en,
+	[SPANISH] = &keyboard_en,
+	[KOREAN] = &keyboard_en,
+	[CHINESE_SIMPLIFIED] = &keyboard_en,
+	[CHINESE] = &keyboard_en
 };

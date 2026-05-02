@@ -20,7 +20,6 @@ void change_cursor(uint8_t cursor) {
 	if (cursor < CURSOR) {
 		mouse_cursor = &cursors[cursor];
 		current_cursor = cursor;
-		printf("changed cursor: %i\n", current_cursor);
 	}
 	//update_mouse();
 }

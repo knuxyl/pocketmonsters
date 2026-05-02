@@ -12,29 +12,38 @@ void reset_element(struct ui_element* element) {
 void draw_keyboard(struct onscreen_keyboard* osk) {
 	DrawRectangle(0, 0, window.width, window.height, (Color) {0,0,0,128});
 	for (uint8_t y = 0; y < 4; y++) {
-		const char *str = keyboards[osk->language]->symbols[osk->page][y];
+		const char *str = keyboards[config.language]->symbols[osk->page][y];
 		for (int i = 0, x = 0; str[i] != '\0' && x < 10; x++) {
 			uint16_t number = (uint16_t)((y * 10) + x);
 			// this is a stupid way of getting advance index but it works, hopefully ill find better
 			int advance = 0;
-			int codepoint = GetCodepoint(&keyboards[osk->language]->symbols[osk->page][y][i], &advance);
+			int codepoint = GetCodepoint(&keyboards[config.language]->symbols[osk->page][y][i], &advance);
 			if (osk->keys[number].clicked) {
 				DrawRectangleRounded((Rectangle) {osk->keys[number].box.x, osk->keys[number].box.y, osk->key_width - (osk->line_padding * 2), osk->key_height - (osk->line_padding * 2)}, 0.5, 256, config.theme->ok);
 				DrawRectangleRoundedLinesEx((Rectangle) {osk->keys[number].box.x, osk->keys[number].box.y, osk->key_width - (osk->line_padding * 2), osk->key_height - (osk->line_padding * 2)}, 0.5, 256, osk->line_padding, config.theme->background);
-				DrawTextCodepoint(osk->font, osk->keys[number].codepoint, osk->keys[number].key, osk->key_height, config.theme->text);
 			} else if (osk->keys[number].hover) {
 				DrawRectangleRounded((Rectangle) {osk->keys[number].box.x, osk->keys[number].box.y, osk->key_width - (osk->line_padding * 2), osk->key_height - (osk->line_padding * 2)}, 0.5, 256, config.theme->hover);
 				DrawRectangleRoundedLinesEx((Rectangle) {osk->keys[number].box.x, osk->keys[number].box.y, osk->key_width - ((window.height * 0.001f) * 2), osk->key_height - (osk->line_padding * 2)}, 0.5, 256, osk->line_padding, config.theme->text);
-				DrawTextCodepoint(osk->font, osk->keys[number].codepoint, osk->keys[number].key, osk->key_height, config.theme->text);
 			} else {
 				DrawRectangleRounded((Rectangle) {osk->keys[number].box.x, osk->keys[number].box.y, osk->key_width - (osk->line_padding * 2), osk->key_height - (osk->line_padding * 2)}, 0.5, 256, config.theme->background);
 				DrawRectangleRoundedLinesEx((Rectangle) {osk->keys[number].box.x, osk->keys[number].box.y, osk->key_width - (osk->line_padding * 2), osk->key_height - (osk->line_padding * 2)}, 0.5, 256, osk->line_padding, config.theme->text);
-				DrawTextCodepoint(osk->font, osk->keys[number].codepoint, osk->keys[number].key, osk->key_height, config.theme->text);
 			}
+			DrawTextCodepoint(osk->font, osk->keys[number].codepoint, osk->keys[number].key, osk->key_height, config.theme->text);
 			i += advance;
-			DrawRectangleRounded((Rectangle) {osk->submit.box.x, osk->submit.box.y, osk->submit.box_size.x, osk->submit.box_size.y}, 0.5, 256, config.theme->background);
-			DrawRectangleRoundedLinesEx((Rectangle) {osk->submit.box.x, osk->submit.box.y, osk->submit.box_size.x, osk->submit.box_size.y}, 0.5, 256, window.height * 0.001f, config.theme->text);
+			if (osk->submit.clicked) {
+				DrawRectangleRounded((Rectangle) {osk->submit.box.x, osk->submit.box.y, osk->submit.box_size.x, osk->submit.box_size.y}, 0.5, 256, config.theme->ok);
+				DrawRectangleRoundedLinesEx((Rectangle) {osk->submit.box.x, osk->submit.box.y, osk->submit.box_size.x, osk->submit.box_size.y}, 0.5, 256, window.height * 0.001f, config.theme->background);
+				
+			} else if (osk->submit.hover) {
+				DrawRectangleRounded((Rectangle) {osk->submit.box.x, osk->submit.box.y, osk->submit.box_size.x, osk->submit.box_size.y}, 0.5, 256, config.theme->hover);
+				DrawRectangleRoundedLinesEx((Rectangle) {osk->submit.box.x, osk->submit.box.y, osk->submit.box_size.x, osk->submit.box_size.y}, 0.5, 256, window.height * 0.001f, config.theme->text);
+			} else {
+				DrawRectangleRounded((Rectangle) {osk->submit.box.x, osk->submit.box.y, osk->submit.box_size.x, osk->submit.box_size.y}, 0.5, 256, config.theme->ok);
+				DrawRectangleRoundedLinesEx((Rectangle) {osk->submit.box.x, osk->submit.box.y, osk->submit.box_size.x, osk->submit.box_size.y}, 0.5, 256, window.height * 0.001f, config.theme->text);
+			}
 			DrawTextCodepoint(osk->font, osk->submit.codepoint, osk->submit.key, osk->key_height, config.theme->text);
+			
+			
 		}
 	}
 }
@@ -43,25 +52,17 @@ void update_keyboard(struct onscreen_keyboard* osk) {
 	osk->key_width = (window.width * 0.98f) / 10;
 	osk->key_padding = (window.height / 2) * 0.025f;
 	osk->key_height = ((window.height / 2) - (osk->key_padding * 7)) / 6;
-	uint8_t language;
-	if (keyboards[config.language] == NULL) {
-		osk->language = ENGLISH;
-	} else {
-		osk->language = config.language;
-	}
-	if (IsFontValid(osk->font)) {
-		UnloadFont(osk->font);
-	}
+	unload_font(osk->font);
 	osk->font = load_font(osk->key_height);
 	int largest_char = 0;
 	float largest_width = 0;
-	for (uint8_t p = 0; p < keyboards[osk->language]->pages; p++) {
+	for (uint8_t p = 0; p < keyboards[config.language]->pages; p++) {
 		for (uint8_t y = 0; y < 4; y++) {
-			const char *str = keyboards[osk->language]->symbols[p][y];
+			const char *str = keyboards[config.language]->symbols[p][y];
 			for (int i = 0, x = 0; str[i] != '\0' && x < 10; x++) {
 				uint16_t number = (uint16_t)((y * 10) + x);
 				int advance = 0;
-				osk->keys[number].codepoint = GetCodepoint(&keyboards[osk->language]->symbols[p][y][i], &advance);
+				osk->keys[number].codepoint = GetCodepoint(&keyboards[config.language]->symbols[p][y][i], &advance);
 				float current_width = MeasureTextCodepoints(osk->font, &osk->keys[number].codepoint, 1, osk->key_height, 0.0f).x;
 				if (current_width > largest_width) {
 					largest_width = current_width;
@@ -85,11 +86,12 @@ void update_keyboard(struct onscreen_keyboard* osk) {
 	osk->x = (window.width / 2) - (osk->width / 2);
 	osk->y = window.height - osk->height;
 	for (uint8_t y = 0; y < 4; y++) {
-		const char *str = keyboards[osk->language]->symbols[osk->page][y];
+		const char *str = keyboards[config.language]->symbols[osk->page][y];
 		for (int i = 0, x = 0; str[i] != '\0' && x < 10; x++) {
 			uint16_t number = (uint16_t)((y * 10) + x);
 			int advance = 0;
-			osk->keys[number].codepoint = GetCodepoint(&keyboards[osk->language]->symbols[osk->page][y][i], &advance);
+			osk->keys[number].codepoint = GetCodepoint(&keyboards[config.language]->symbols[osk->page][y][i], &advance);
+			printf("Codepoint: %i\n", osk->keys[number].codepoint);
 			osk->keys[number].key_size = MeasureTextCodepoints(osk->font, &osk->keys[number].codepoint, 1, osk->key_height, 0.0f);
 			osk->keys[number].box.x = osk->x + (osk->key_width * x);
 			osk->keys[number].box.y = osk->y + (osk->key_height * (y + 1)) + (osk->key_padding * (y + 1));
@@ -105,23 +107,19 @@ void update_keyboard(struct onscreen_keyboard* osk) {
 	osk->submit.box.x = osk->x + osk->width - osk->submit.box_size.x;
 	osk->submit.box.y = osk->keys[39].key.y + osk->submit.box_size.y + osk->key_padding;
 	int advance = 0;
-	//osk->keys[number].codepoint = GetCodepoint(&keyboards[osk->language]->symbols[p][y][i], &advance);
+	//osk->keys[number].codepoint = GetCodepoint(&keyboards[config.language]->symbols[p][y][i], &advance);
 	osk->submit.codepoint = GetCodepoint("↵", &advance);
-	printf("Codepoint: U+%X\n", osk->submit.codepoint);
-	int index = GetGlyphIndex(osk->font, 0x21B5);
-	printf("glyph index: %d\n", index);
 	osk->submit.key_size = MeasureTextCodepoints(osk->font, &osk->submit.codepoint, 1, osk->key_height, 0.0f);
 	osk->submit.key.x = osk->submit.box.x + (osk->submit.box_size.x / 2) - (osk->submit.key_size.x / 2);
 	osk->submit.key.y = osk->submit.box.y + (osk->submit.box_size.y / 2) - (osk->submit.key_size.y / 2);
 	// 🗏
 	// ⏎ ↵
-	printf("updating\n");
 }
 
 
 void input_keyboard(struct onscreen_keyboard* osk) {
 	if (is_pressed(INPUT_Y)) {
-		if (osk->page + 1 >= keyboards[osk->language]->pages) {
+		if (osk->page + 1 >= keyboards[config.language]->pages) {
 			osk->page = 0;
 		} else {
 			osk->page++;
@@ -143,7 +141,6 @@ void input_keyboard(struct onscreen_keyboard* osk) {
 				}
 				if (osk->index != i) {
 					osk->index = i;
-					printf("Set index: %i:%i\n", i, osk->index);
 				}
 				hover = true;
 				break;
@@ -173,12 +170,40 @@ void input_keyboard(struct onscreen_keyboard* osk) {
 				}
 			}
 		}
+		hover = false;
+		if (mouse_x > osk->submit.box.x &&
+			mouse_x < osk->submit.box.x + osk->submit.box_size.x &&
+			mouse_y > osk->submit.box.y &&
+			mouse_y < osk->submit.box.y + osk->submit.box_size.y) {
+			if (!osk->submit.hover) {
+				osk->submit.hover = true;
+			}
+			if (current_cursor != CURSOR_HAND) {
+				change_cursor(CURSOR_HAND);
+			}
+			if (osk->index != 43) {
+				osk->index = 43;
+			}
+			hover = true;
+		} else {
+			if (osk->submit.hover) {
+				osk->submit.hover = false;
+			}
+			if (osk->index == 43) {
+				osk->index = UI_NOSELECTION;
+			}
+		}
 	}
 	if (is_pressed(INPUT_A)) {
-		printf("Clicked: %i\n", osk->index);
 		if (osk->index != UI_NOSELECTION) {
-			if (!osk->keys[osk->index].clicked) {
-				osk->keys[osk->index].clicked = true;
+			if (osk->index < 40) {
+				if (!osk->keys[osk->index].clicked) {
+					osk->keys[osk->index].clicked = true;
+				}
+			} else {
+				if (osk->index == 43) {
+					osk->submit.clicked = true;
+				}
 			}
 		}
 	}
@@ -187,6 +212,9 @@ void input_keyboard(struct onscreen_keyboard* osk) {
 			if (osk->keys[i].clicked) {
 				osk->keys[i].clicked = false;
 			}
+		}
+		if (osk->submit.clicked) {
+			osk->submit.clicked = false;
 		}
 	}
 }
@@ -217,7 +245,6 @@ void input_element(struct ui_element* element) {
 						hover_element = true;
 						if (current_cursor != CURSOR_HAND) {
 							change_cursor(CURSOR_HAND);
-							printf("changing\n");
 							//SetMouseCursor(mouse_cursor);
 						}
 					}
@@ -235,7 +262,6 @@ void input_element(struct ui_element* element) {
 				}
 				if (current_cursor != CURSOR_POINTER) {
 					change_cursor(CURSOR_POINTER);
-					printf("resetting\n");
 					//SetMouseCursor(mouse_cursor);
 				}
 			}

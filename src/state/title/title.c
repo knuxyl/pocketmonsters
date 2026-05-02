@@ -51,7 +51,8 @@ void options() {
 	} else {
 		config.language++;
 	}
-	update_element(&titlemenu_element);
+	//update_element(&titlemenu_element);
+	update_state();
 }
 
 void exit_game() {
@@ -129,6 +130,9 @@ void loop_title() {
 	//onscreen_keyboard();
 	if (is_pressed(INPUT_SELECT)) {
 		show_keyboard = !show_keyboard;
+		if (show_keyboard) {
+			update_keyboard(&onscreen_keyboard);
+		}
 	}
 	if (show_keyboard) {
 		input_keyboard(&onscreen_keyboard);
