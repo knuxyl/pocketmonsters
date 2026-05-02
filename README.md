@@ -17,6 +17,8 @@
 	- Press \ to open/close on screen keyboard
 		- Press s to cycle through pages
 - Most testing goes in src/test/test.c
+- Currently focusing on keyboard for name input so I can move onto tilemap
+![Alt text](https://github.com/knuxyl/pocketmonsters/blob/master/images/progress.png?raw=true "Progress")
 
 # Notable competing project
 This project uses Godot so will have much more rapid development and quick cross platform releases.
