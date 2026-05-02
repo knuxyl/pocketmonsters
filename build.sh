@@ -1,5 +1,5 @@
 #!/bin/bash
-export BUILD_TYPE="Debug"
+export BUILD_TYPE="Release"
 export CFLAGS="-O3 -pipe -flto=auto -fuse-linker-plugin --exec-charset=utf8"
 export CXXFLAGS="${CFLAGS}"
 #if [[ "${1}" ]]; then

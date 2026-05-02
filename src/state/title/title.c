@@ -30,6 +30,7 @@ static Texture2D background_texture;
 static float background_x = 0;
 static float background_y = 0;
 static float background_scale = 1;
+bool show_keyboard;
 
 
 void continue_game() {
@@ -127,10 +128,12 @@ void loop_title() {
 	}
 	//onscreen_keyboard();
 	if (is_pressed(INPUT_SELECT)) {
-		
+		show_keyboard = !show_keyboard;
 	}
-	input_keyboard(&onscreen_keyboard);
-	draw_keyboard(&onscreen_keyboard);
+	if (show_keyboard) {
+		input_keyboard(&onscreen_keyboard);
+		draw_keyboard(&onscreen_keyboard);
+	}
 }
 
 void init_title() {

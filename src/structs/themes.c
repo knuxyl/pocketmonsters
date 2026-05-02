@@ -5,5 +5,7 @@ struct theme {
 	Color text;
 	Color disabled;
 	Color hover;
+	Color invalid;
+	Color ok;
 };
 

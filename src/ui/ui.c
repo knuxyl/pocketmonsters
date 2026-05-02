@@ -8,7 +8,7 @@ void reset_element(struct ui_element* element) {
 }
 
 
-
+// My cpu usage is sitting around 0.3-0.4% on idle while keyboard is open (7950x3d), the whole keyboard code needs to be optimized further but I suspect it's the rectangle draws... no idea what to do in this situation.
 void draw_keyboard(struct onscreen_keyboard* osk) {
 	DrawRectangle(0, 0, window.width, window.height, (Color) {0,0,0,128});
 	for (uint8_t y = 0; y < 4; y++) {
@@ -19,13 +19,13 @@ void draw_keyboard(struct onscreen_keyboard* osk) {
 			int advance = 0;
 			int codepoint = GetCodepoint(&keyboards[osk->language]->symbols[osk->page][y][i], &advance);
 			if (osk->keys[number].clicked) {
-				DrawRectangleRounded((Rectangle) {osk->keys[number].box.x, osk->keys[number].box.y, osk->key_width - (osk->line_padding * 2), osk->key_height - (osk->line_padding * 2)}, 0.5, 256, config.theme->background);
-				DrawRectangleRoundedLinesEx((Rectangle) {osk->keys[number].box.x, osk->keys[number].box.y, osk->key_width - (osk->line_padding * 2), osk->key_height - (osk->line_padding * 2)}, 0.5, 256, osk->line_padding, config.theme->text);
-				DrawTextCodepoint(osk->font, osk->keys[number].codepoint, osk->keys[number].key, osk->key_height, config.theme->tr_background);
+				DrawRectangleRounded((Rectangle) {osk->keys[number].box.x, osk->keys[number].box.y, osk->key_width - (osk->line_padding * 2), osk->key_height - (osk->line_padding * 2)}, 0.5, 256, config.theme->ok);
+				DrawRectangleRoundedLinesEx((Rectangle) {osk->keys[number].box.x, osk->keys[number].box.y, osk->key_width - (osk->line_padding * 2), osk->key_height - (osk->line_padding * 2)}, 0.5, 256, osk->line_padding, config.theme->background);
+				DrawTextCodepoint(osk->font, osk->keys[number].codepoint, osk->keys[number].key, osk->key_height, config.theme->text);
 			} else if (osk->keys[number].hover) {
-				DrawRectangleRounded((Rectangle) {osk->keys[number].box.x, osk->keys[number].box.y, osk->key_width - (osk->line_padding * 2), osk->key_height - (osk->line_padding * 2)}, 0.5, 256, config.theme->text);
-				DrawRectangleRoundedLinesEx((Rectangle) {osk->keys[number].box.x, osk->keys[number].box.y, osk->key_width - ((window.height * 0.001f) * 2), osk->key_height - (osk->line_padding * 2)}, 0.5, 256, osk->line_padding, config.theme->background);
-				DrawTextCodepoint(osk->font, osk->keys[number].codepoint, osk->keys[number].key, osk->key_height, config.theme->background);
+				DrawRectangleRounded((Rectangle) {osk->keys[number].box.x, osk->keys[number].box.y, osk->key_width - (osk->line_padding * 2), osk->key_height - (osk->line_padding * 2)}, 0.5, 256, config.theme->hover);
+				DrawRectangleRoundedLinesEx((Rectangle) {osk->keys[number].box.x, osk->keys[number].box.y, osk->key_width - ((window.height * 0.001f) * 2), osk->key_height - (osk->line_padding * 2)}, 0.5, 256, osk->line_padding, config.theme->text);
+				DrawTextCodepoint(osk->font, osk->keys[number].codepoint, osk->keys[number].key, osk->key_height, config.theme->text);
 			} else {
 				DrawRectangleRounded((Rectangle) {osk->keys[number].box.x, osk->keys[number].box.y, osk->key_width - (osk->line_padding * 2), osk->key_height - (osk->line_padding * 2)}, 0.5, 256, config.theme->background);
 				DrawRectangleRoundedLinesEx((Rectangle) {osk->keys[number].box.x, osk->keys[number].box.y, osk->key_width - (osk->line_padding * 2), osk->key_height - (osk->line_padding * 2)}, 0.5, 256, osk->line_padding, config.theme->text);
@@ -52,7 +52,7 @@ void update_keyboard(struct onscreen_keyboard* osk) {
 	if (IsFontValid(osk->font)) {
 		UnloadFont(osk->font);
 	}
-	osk->font = load_font(osk->key_height, osk->language);
+	osk->font = load_font(osk->key_height);
 	int largest_char = 0;
 	float largest_width = 0;
 	for (uint8_t p = 0; p < keyboards[osk->language]->pages; p++) {
@@ -106,7 +106,10 @@ void update_keyboard(struct onscreen_keyboard* osk) {
 	osk->submit.box.y = osk->keys[39].key.y + osk->submit.box_size.y + osk->key_padding;
 	int advance = 0;
 	//osk->keys[number].codepoint = GetCodepoint(&keyboards[osk->language]->symbols[p][y][i], &advance);
-	osk->submit.codepoint = GetCodepoint("⏎", &advance);
+	osk->submit.codepoint = GetCodepoint("↵", &advance);
+	printf("Codepoint: U+%X\n", osk->submit.codepoint);
+	int index = GetGlyphIndex(osk->font, 0x21B5);
+	printf("glyph index: %d\n", index);
 	osk->submit.key_size = MeasureTextCodepoints(osk->font, &osk->submit.codepoint, 1, osk->key_height, 0.0f);
 	osk->submit.key.x = osk->submit.box.x + (osk->submit.box_size.x / 2) - (osk->submit.key_size.x / 2);
 	osk->submit.key.y = osk->submit.box.y + (osk->submit.box_size.y / 2) - (osk->submit.key_size.y / 2);
@@ -390,7 +393,7 @@ void update_element(struct ui_element* element) {
 		int child_h = element->child_h;
 		element->child_h = (int)roundf((element->h - (element->child_gap * (element->child_count - 1))) / element->child_count);
 		if (!IsFontValid(element->font)) {
-			element->font = load_font(element->child_h, config.language);
+			element->font = load_font(element->child_h);
 		}
 		for (uint8_t i = 0; i < element->child_count; i++) {
 			if (element->children[i]->type == UI_TEXT || element->children[i]->type == UI_MENU_TEXT) {
@@ -422,7 +425,7 @@ void update_element(struct ui_element* element) {
 				unload_font(element->font);
 			}
 			element->language = config.language;
-			element->font = load_font(element->child_h, config.language);
+			element->font = load_font(element->child_h);
 		}
 		
 		// Positioning

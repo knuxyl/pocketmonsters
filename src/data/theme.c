@@ -5,8 +5,9 @@ const struct theme themes[THEME] = {
 		.tr_background = (Color) {255,255,255,51},
 		.text = (Color) {0,0,0,255},
 		.disabled = (Color) {128,128,128,255},
-		.hover = (Color) {0,0,0,255},
-		//.hover = (Color) {184,3,0,255}
+		.hover = (Color) {139,197,205,255},
+		.invalid = (Color) {246,164,0,255},
+		.ok = (Color) {115,172,49,255}
 	},
 	[DARK_THEME] = {
 		.dark = true,
@@ -14,8 +15,9 @@ const struct theme themes[THEME] = {
 		.tr_background = (Color) {16,16,16,51},
 		.text = (Color) {255,255,255,255},
 		.disabled = (Color) {128,128,128,255},
-		//.hover = (Color) {184,3,0,255}
-		.hover = (Color) {255,255,255,255},
+		.hover = (Color) {41,115,131,255},
+		.invalid = (Color) {139,41,0,255},
+		.ok = (Color) {82,98,41,255}
 	},
 	[GB_LIGHT_THEME] = {
 		.dark = false,
@@ -23,8 +25,9 @@ const struct theme themes[THEME] = {
 		.tr_background = (Color) {224,248,207,85},
 		.text = (Color) {48,104,80,255},
 		.disabled = (Color) {136,176,143,255},
-		//.hover = (Color) {184,3,0,255}
-		.hover = (Color) {48,104,80,255},
+		.hover = (Color) {139,197,205,255},
+		.invalid = (Color) {246,164,0,255},
+		.ok = (Color) {115,172,49,255}
 	},
 	[GB_DARK_THEME] = {
 		.dark = true,
@@ -32,7 +35,8 @@ const struct theme themes[THEME] = {
 		.tr_background = (Color) {48,104,80,85},
 		.text = (Color) {224,248,207,255},
 		.disabled = (Color) {136,176,143,255},
-		//.hover = (Color) {184,3,0,255}
-		.hover = (Color) {224,248,207,255},
+		.hover = (Color) {41,115,131,255},
+		.invalid = (Color) {139,41,0,255},
+		.ok = (Color) {82,98,41,255}
 	},
 };
