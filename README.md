@@ -40,7 +40,7 @@ This project uses Godot so will have much more rapid development and quick cross
 		- English + Japanese (No Kanji)
 - [x] Multilingual support
 	- English, Japanese, German, French, Spanish, Italian, Korean, Chinese Simplified, and Chinese
-	- Noto font used for each language.
+	- GNU unifont
 - [ ] Themes
 	- [x] Color schemes and custom mouse cursor
 	- [ ] More custom mouse cursors
