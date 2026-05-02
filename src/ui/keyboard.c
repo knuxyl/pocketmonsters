@@ -1,5 +1,5 @@
 struct keyboard {
-	const char* symbols[6][4];
+	const char* symbols[12][4];
 	uint8_t x, y, pages; // shift is how many different collection of symbols the shift key will cycle through (up to 6 pages total)
 	Font font;
 };
@@ -15,18 +15,21 @@ struct keyboard keyboard_en = {
 };
 struct keyboard keyboard_jp = {
 	.symbols = {
-		{"abcdefghij", "klmnopqrst", "uvwxyz,.-=", "1234567890"},
-		{"ABCDEFGHIJ", "KLMNOPQRST", "UVWXYZ。゜_+", "!@#$%^&*¥ー"},
+		{"abcdefghij", "klmnopqrst", "uvwxyz,.-'", "1234567890"},
+		{"ABCDEFGHIJ", "KLMNOPQRST", "UVWXYZ<>_\"", "!@#$%^&*()"},
+		{"àâäæéèêëíì", "îïôöœùûüÿç", "ÀÂÄÆÉÈÊËÍÌ", "ÎÏÔÖŒÙÛÜŸÇ"},
+		{"ñß~{}《》□=|+", "Ñẞ[]【】「」『』", "?¿♂♀«»⁂∴⌘܀", "〜ー。・゜;:…，゛"},
 		{"あぁいぃうぅえぇおぉ", "かきくけこさしすせそ", "たちつてとなにぬねの", "はひふへほまみむめも"},
 		{"やゃゆゅよょらりるれ", "ろわをんっがぎぐげご", "ざじずぜぞだぢづでど", "ばびぶべぼぱぴぷぺぽ"},
 		{"アァイィウゥエェオォ", "カキクケコサシスセソ", "タチツテトナニヌネノ", "ハヒフヘホマミムメモ"},
-		{"ヤャユュヨョラリルレ", "ロワヲンッガギグゲゴ", "ザジズゼゾダヂヅデド", "バビブベボパピプペポ"}
+		{"ヤャユュヨョラリルレ", "ロワヲンッガギグゲゴ", "ザジズゼゾダヂヅデド", "バビブベボパピプペポ"},
+		{"ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅ", "ㅆㅇㅈㅉㅊㅋㅌㅍㅎㅏ", "ㅐㅑㅒㅓㅔㅕㅖㅗㅘㅙ", "ㅚㅛㅜㅝㅞㅟㅠㅡㅢㅣ"},
+		{"∅ㄱㄲㄳㄴㄵㄶㄷㄹㄺ", "ㄻㄼㄽㄾㄿㅀㅁㅂㅄㅅ", "ㅆㅇㅈㅊㅋㅌㅍㅎ©™", "¤¢£₤€₣₽₱₩¥"},
+		{"абвгдеёжзи", "йклмнопрст", "уфхцчшщъыь", "эюя✦✧≛⓵✪▯⛩"},
+		{"АБВГДЕЁЖЗИ", "ЙКЛМНОПРСТ", "УФХЦЧШЩЪЫЬ", "ЭЮЯ●○◆◇⭑⭒⍟"}
 	},
-	.x = 0, .y = 0, .pages = 6,
+	.x = 0, .y = 0, .pages = 12,
 };
-
-// fin hell i have no idea how to layout japanese with hiragana and katakana
-// much less chinese....
 
 struct keyboard* keyboards[LANGUAGE] = {
 	[ENGLISH] = &keyboard_en,
