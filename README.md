@@ -12,6 +12,7 @@
 		- Terminal output shows card information (only Alakazam atm, was copied)
 	- Press N/M to cycle through game audio
 		- Press ,/. to cycle through songs
+		- Press t to mute/unmute (game is probably muted)
 	- Click/select options to change language
 	- Press \ to open/close on screen keyboard
 		- Press s to cycle through pages
