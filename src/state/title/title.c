@@ -59,7 +59,17 @@ void exit_game() {
 }
 
 void update_title() {
-	background_scale = window.height / background_texture.height;	
+	if (IsImageValid(background_image)) {
+		UnloadImage(background_image);
+	}
+	if (IsTextureValid(background_texture)) {
+		UnloadTexture(background_texture);
+	}
+	background_image = LoadImageFromMemory(".png", title_background_png, title_background_png_len);
+	background_scale = window.height / background_image.height;
+	ImageResize(&background_image, (int)(background_image.width * background_scale), (int)(background_image.height * background_scale));
+	background_texture = LoadTextureFromImage(background_image);
+	
 	update_element(&logo_element);
 	if (state == 0) {
 		update_element(&pushstart_element);
@@ -70,18 +80,20 @@ void update_title() {
 }
 
 void loop_title() {
-	background_x = background_x - ((background_texture.width * background_scale) * 0.0001f);
-	if (background_x + (background_texture.width * background_scale) > -1) {
-		DrawTextureEx(background_texture, (Vector2) {background_x, background_y}, 0.0f, background_scale, (Color) {255,255,255,64});
+	background_x = background_x - (background_texture.width * 0.0001f);
+	if (background_x + background_texture.width > -1) {
+		DrawTextureEx(background_texture, (Vector2) {background_x, background_y}, 0.0f, 1.0f, (Color) {255,255,255,64});
 	}
 	uint8_t i = 1;
-	while (background_x + ((background_texture.width * background_scale) * i) < window.width) {
-		DrawTextureEx(background_texture, (Vector2) {background_x + ((background_texture.width * background_scale) * i), background_y}, 0.0f, background_scale, (Color) {255,255,255,64});
+	while (background_x + (background_texture.width * i) < window.width) {
+		DrawTextureEx(background_texture, (Vector2) {background_x + (background_texture.width * i), background_y}, 0.0f, 1.0f, (Color) {255,255,255,64});
 		i++;
 	}
-	if (background_x + (background_texture.width * background_scale) < 0) {
+	if (background_x + background_texture.width < 0) {
 		background_x = background_x + ((uint)background_x * -1);
 	}
+	
+	
 	draw_element(&logo_element);
 	if (state == 0) {
 		pushstart_timer = pushstart_timer + dt;		
@@ -127,6 +139,8 @@ void init_title() {
 	GenTextureMipmaps(&logo_child.image);
 	SetTextureFilter(logo_child.image, config.filter);
 	background_image = LoadImageFromMemory(".png", title_background_png, title_background_png_len);
+	background_scale = window.height / background_image.height;
+	ImageResize(&background_image, (int)(background_image.width * background_scale), (int)(background_image.height * background_scale));
 	background_texture = LoadTextureFromImage(background_image);
 	current_state = init_title;
 	play_music(MUSIC_TITLE);

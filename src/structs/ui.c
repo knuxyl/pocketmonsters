@@ -9,6 +9,7 @@ struct key {
 };
 
 struct onscreen_keyboard {
+	float line_padding;
 	float height;
 	float width;
 	float key_height;
@@ -20,6 +21,7 @@ struct onscreen_keyboard {
 	struct key keys[40];
 	struct key submit;
 	uint8_t language;
+	uint16_t index;
 	Font font;
 };
 
