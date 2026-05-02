@@ -1,5 +1,5 @@
-[ENGLISH] = " !#$%&'()*+,-.0123456789:<=>@ABCDEFGHIJKLMNOPQRSTUVWXYZ^_abcdefghijklmnopqrstuvwxyzé←↑↵◆●☆♀♂✖✧🟊¥ー。゜",
-[JAPANESE] = "あぁいぃうぅえぇおぉかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゃゆゅよょらりるれろわをんっがぎぐげござじずぜぞだぢづでどばびぶべぼぱぴぷぺぽアァイィウゥエェオォカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤャユュヨョラリルレロワヲンッガギグゲゴザジズゼゾダヂヅデドバビブベボパピプペポ !#$%&'()*+,-.0123456789:<=>@ABCDEFGHIJKLMNOPQRSTUVWXYZ^_abcdefghijklmnopqrstuvwxyzé←↑↵◆●☆♀♂✖✧🟊¥ー。゜",
+[ENGLISH] = " !#$%&'()*+,-.0123456789:<=>@ABCDEFGHIJKLMNOPQRSTUVWXYZ^_abcdefghijklmnopqrstuvwxyzé←↑↵◆⏎⮐✗␣⌫◆●☆♀♂✖✧🟊¥ー。゜✕×",
+[JAPANESE] = "あぁいぃうぅえぇおぉかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゃゆゅよょらりるれろわをんっがぎぐげござじずぜぞだぢづでどばびぶべぼぱぴぷぺぽアァイィウゥエェオォカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤャユュヨョラリルレロワヲンッガギグゲゴザジズゼゾダヂヅデドバビブベボパピプペポ !#$%&'()*+,-.0123456789:<=>@ABCDEFGHIJKLMNOPQRSTUVWXYZ^_abcdefghijklmnopqrstuvwxyzé←↑↵⏎⮐✗␣⌫◆●☆♀♂✖✧🟊¥ー。゜✕×",
 [GERMAN] = " !#$%&'()*+,-.0123456789:<=>@ABCDEFGHIJKLMNOPQRSTUVWXYZ^_abcdefghijklmnopqrstuvwxyzé←↑↵◆●☆♀♂✖✧🟊",
 [FRENCH] = " !#$%&'()*+,-.0123456789:<=>@ABCDEFGHIJKLMNOPQRSTUVWXYZ^_abcdefghijklmnopqrstuvwxyzé←↑↵◆●☆♀♂✖✧🟊",
 [ITALIAN] = " !#$%&'()*+,-.0123456789:<=>@ABCDEFGHIJKLMNOPQRSTUVWXYZ^_abcdefghijklmnopqrstuvwxyzé←↑↵◆●☆♀♂✖✧🟊",

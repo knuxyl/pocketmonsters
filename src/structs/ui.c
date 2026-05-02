@@ -20,6 +20,9 @@ struct onscreen_keyboard {
 	uint8_t page;
 	struct key keys[40];
 	struct key submit;
+	struct key cancel;
+	struct key space;
+	struct key backspace;
 	uint8_t language;
 	uint16_t index;
 	Font font;

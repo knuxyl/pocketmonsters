@@ -71,7 +71,7 @@ void update_title() {
 	background_scale = window.height / background_image.height;
 	ImageResize(&background_image, (int)(background_image.width * background_scale), (int)(background_image.height * background_scale));
 	background_texture = LoadTextureFromImage(background_image);
-	
+	SetTextureFilter(background_texture, TEXTURE_FILTER_POINT);
 	update_element(&logo_element);
 	if (state == 0) {
 		update_element(&pushstart_element);
@@ -149,6 +149,7 @@ void init_title() {
 	background_scale = window.height / background_image.height;
 	ImageResize(&background_image, (int)(background_image.width * background_scale), (int)(background_image.height * background_scale));
 	background_texture = LoadTextureFromImage(background_image);
+	SetTextureFilter(background_texture, TEXTURE_FILTER_POINT);
 	current_state = init_title;
 	play_music(MUSIC_TITLE);
 	loop_state = loop_title;
