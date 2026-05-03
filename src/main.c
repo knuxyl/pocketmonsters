@@ -21,6 +21,7 @@ void init() {
     init_title();
     init_font();
     init_mouse();
+    init_keyboard();
 };
 
 void main(void)
@@ -38,7 +39,7 @@ void main(void)
         loop_audio();
        
 		BeginDrawing();
-		ClearBackground(config.theme->background);
+		ClearBackground(config.theme->colors[COLOR_BACKGROUND]);
 		
         loop_state();
         loop_test();

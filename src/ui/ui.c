@@ -1,4 +1,6 @@
 #include "keyboard.c"
+static float cursor_timer;
+static Color cursor_color;
 
 void reset_element(struct ui_element* element) {
 	if (element->index != UI_NOSELECTION) {
@@ -7,44 +9,72 @@ void reset_element(struct ui_element* element) {
 	}
 }
 
+	
+
+	
+static void measure_input() {
+	int count = 0;
+	for (int i = 0; i < osk.input_count; i++) {
+	    int char_size = 0;
+	    const char *letter = CodepointToUTF8(osk.input[i], &char_size);
+	    if (count + char_size >= (int)sizeof(osk.input_string) - 1) {
+	        break;
+	    }
+	    memcpy(osk.input_string + count, letter, char_size);
+	    count += char_size;
+	}
+	osk.input_string[count] = '\0';
+	
+	osk.input_size = MeasureTextEx(osk.font, osk.input_string, osk.font_size, 0.0f);
+	osk.input_position.x = (osk.inputbox_position.x + (osk.inputbox_size.x / 2)) - (osk.input_size.x / 2);
+	osk.input_position.y = osk.inputbox_position.y + ((osk.key_height - osk.input_size.y) / 2); 
+	osk.cursor_position.x = osk.input_position.x + osk.input_size.x + (osk.key_width * 0.1f);
+	
+}
+
+
 
 void draw_keyboard() {
-	DrawRectangle(0, 0, window.width, window.height, config.theme->tr_background);
+	cursor_timer = cursor_timer + dt;		
+	if (cursor_timer >= 0.75 && cursor_timer < 1.5) {
+		cursor_color = TRANSPARENT;
+	} else if (cursor_timer > 1.5) {
+		cursor_timer = 0;
+		cursor_color = config.theme->colors[COLOR_TEXT];
+	}
+	DrawRectangle(0, 0, window.width, window.height, config.theme->colors[COLOR_TR_TEXT]);
+	DrawRectangleRounded((Rectangle) {osk.inputbox_position.x, osk.inputbox_position.y, osk.inputbox_size.x, osk.inputbox_size.y}, 0.5f, 8, config.theme->colors[COLOR_BACKGROUND]);
+	DrawTextEx(osk.font, osk.input_string, osk.input_position, osk.font_size, 0.0f, config.theme->colors[COLOR_TEXT]);
+	DrawRectangle(osk.cursor_position.x, osk.cursor_position.y, osk.cursor_size.x, osk.cursor_size.y, cursor_color);
 	for (uint16_t i = osk.page_index; i < osk.page_index + osk.keys_per_page && i < osk.letter_count; i++) {
-		if (osk.letters[i].click) {
-			DrawRectangleRounded((Rectangle) {osk.letters[i].slot_position.x, osk.letters[i].slot_position.y, osk.key_width, osk.key_height}, 0.5f, 8, config.theme->text);
-			DrawRectangleRounded((Rectangle) {osk.letters[i].background_position.x, osk.letters[i].background_position.y, osk.background_size.x, osk.background_size.y}, 0.5f, 8, config.theme->ok);
-			DrawTextEx(osk.font, keyboard_letters[i], osk.letters[i].letter_position, osk.font_size, 0.0f, config.theme->text);
+		if (osk.letters[i].clicked) {
+			//DrawRectangleRounded((Rectangle) {osk.letters[i].slot_position.x, osk.letters[i].slot_position.y, osk.key_width, osk.key_height}, 0.5f, 8, config.theme->colors[COLOR_TEXT]);
+			DrawRectangleRounded((Rectangle) {osk.letters[i].background_position.x, osk.letters[i].background_position.y, osk.background_size.x, osk.background_size.y}, 0.5f, 8, config.theme->colors[COLOR_OK]);
+			DrawTextEx(osk.font, keyboard_letters[i], osk.letters[i].letter_position, osk.font_size, 0.0f, config.theme->colors[COLOR_TEXT]);
 		} else if (osk.letters[i].hover) {
-			DrawRectangleRounded((Rectangle) {osk.letters[i].slot_position.x, osk.letters[i].slot_position.y, osk.key_width, osk.key_height}, 0.5f, 8, config.theme->background);
-			DrawRectangleRounded((Rectangle) {osk.letters[i].background_position.x, osk.letters[i].background_position.y, osk.background_size.x, osk.background_size.y}, 0.5f, 8, config.theme->text);
-			DrawTextEx(osk.font, keyboard_letters[i], osk.letters[i].letter_position, osk.font_size, 0.0f, config.theme->background);
+			//DrawRectangleRounded((Rectangle) {osk.letters[i].slot_position.x, osk.letters[i].slot_position.y, osk.key_width, osk.key_height}, 0.5f, 8, config.theme->colors[COLOR_BACKGROUND]);
+			DrawRectangleRounded((Rectangle) {osk.letters[i].background_position.x, osk.letters[i].background_position.y, osk.background_size.x, osk.background_size.y}, 0.5f, 8, config.theme->colors[COLOR_TEXT]);
+			DrawTextEx(osk.font, keyboard_letters[i], osk.letters[i].letter_position, osk.font_size, 0.0f, config.theme->colors[COLOR_BACKGROUND]);
 		} else {
-			DrawRectangleRounded((Rectangle) {osk.letters[i].slot_position.x, osk.letters[i].slot_position.y, osk.key_width, osk.key_height}, 0.5f, 8, config.theme->text);
-			DrawRectangleRounded((Rectangle) {osk.letters[i].background_position.x, osk.letters[i].background_position.y, osk.background_size.x, osk.background_size.y}, 0.5f, 8, config.theme->background);
-			DrawTextEx(osk.font, keyboard_letters[i], osk.letters[i].letter_position, osk.font_size, 0.0f, config.theme->text);
+			//DrawRectangleRounded((Rectangle) {osk.letters[i].slot_position.x, osk.letters[i].slot_position.y, osk.key_width, osk.key_height}, 0.5f, 8, config.theme->colors[COLOR_TEXT]);
+			DrawRectangleRounded((Rectangle) {osk.letters[i].background_position.x, osk.letters[i].background_position.y, osk.background_size.x, osk.background_size.y}, 0.5f, 8, config.theme->colors[COLOR_BACKGROUND]);
+			DrawTextEx(osk.font, keyboard_letters[i], osk.letters[i].letter_position, osk.font_size, 0.0f, config.theme->colors[COLOR_TEXT]);
 		}
-		
 	}
 	for (uint8_t i = 0; i < osk.button_count; i++) {
-		if (osk.buttons[i].click) {
-			DrawRectangleRounded((Rectangle) {osk.buttons[i].slot_position.x, osk.buttons[i].slot_position.y, osk.buttons[i].slot_size.x, osk.buttons[i].slot_size.y}, 0.5f, 8, config.theme->text);
-			DrawRectangleRounded((Rectangle) {osk.buttons[i].background_position.x, osk.buttons[i].background_position.y, osk.buttons[i].background_size.x, osk.buttons[i].background_size.y}, 0.5f, 8, config.theme->ok);
-			DrawTextEx(osk.font, osk.buttons[i].letter, osk.buttons[i].letter_position, osk.font_size, 0.0f, config.theme->text);
+		if (osk.buttons[i].clicked) {
+			//DrawRectangleRounded((Rectangle) {osk.buttons[i].slot_position.x, osk.buttons[i].slot_position.y, osk.buttons[i].slot_size.x, osk.buttons[i].slot_size.y}, 0.5f, 8, config.theme->colors[COLOR_TEXT]);
+			DrawRectangleRounded((Rectangle) {osk.buttons[i].background_position.x, osk.buttons[i].background_position.y, osk.buttons[i].background_size.x, osk.buttons[i].background_size.y}, 0.5f, 8, config.theme->colors[COLOR_OK]);
+			DrawTextEx(osk.font, osk.buttons[i].letter, osk.buttons[i].letter_position, osk.font_size, 0.0f, config.theme->colors[COLOR_TEXT]);
 		} else if (osk.buttons[i].hover) {
-			DrawRectangleRounded((Rectangle) {osk.buttons[i].slot_position.x, osk.buttons[i].slot_position.y, osk.buttons[i].slot_size.x, osk.buttons[i].slot_size.y}, 0.5f, 8, config.theme->background);
-			DrawRectangleRounded((Rectangle) {osk.buttons[i].background_position.x, osk.buttons[i].background_position.y, osk.buttons[i].background_size.x, osk.buttons[i].background_size.y}, 0.5f, 8, config.theme->text);
-			DrawTextEx(osk.font, osk.buttons[i].letter, osk.buttons[i].letter_position, osk.font_size, 0.0f, config.theme->background);
+			//DrawRectangleRounded((Rectangle) {osk.buttons[i].slot_position.x, osk.buttons[i].slot_position.y, osk.buttons[i].slot_size.x, osk.buttons[i].slot_size.y}, 0.5f, 8, config.theme->colors[COLOR_BACKGROUND]);
+			DrawRectangleRounded((Rectangle) {osk.buttons[i].background_position.x, osk.buttons[i].background_position.y, osk.buttons[i].background_size.x, osk.buttons[i].background_size.y}, 0.5f, 8, config.theme->colors[COLOR_TEXT]);
+			DrawTextEx(osk.font, osk.buttons[i].letter, osk.buttons[i].letter_position, osk.font_size, 0.0f, config.theme->colors[COLOR_BACKGROUND]);
 		} else {
-			DrawRectangleRounded((Rectangle) {osk.buttons[i].slot_position.x, osk.buttons[i].slot_position.y, osk.buttons[i].slot_size.x, osk.buttons[i].slot_size.y}, 0.5f, 8, config.theme->text);
-			DrawRectangleRounded((Rectangle) {osk.buttons[i].background_position.x, osk.buttons[i].background_position.y, osk.buttons[i].background_size.x, osk.buttons[i].background_size.y}, 0.5f, 8, config.theme->background);
-			DrawTextEx(osk.font, osk.buttons[i].letter, osk.buttons[i].letter_position, osk.font_size, 0.0f, config.theme->text);
+			//DrawRectangleRounded((Rectangle) {osk.buttons[i].slot_position.x, osk.buttons[i].slot_position.y, osk.buttons[i].slot_size.x, osk.buttons[i].slot_size.y}, 0.5f, 8, config.theme->colors[COLOR_TEXT]);
+			DrawRectangleRounded((Rectangle) {osk.buttons[i].background_position.x, osk.buttons[i].background_position.y, osk.buttons[i].background_size.x, osk.buttons[i].background_size.y}, 0.5f, 8, config.theme->colors[osk.buttons[i].color_background]);
+			DrawTextEx(osk.font, osk.buttons[i].letter, osk.buttons[i].letter_position, osk.font_size, 0.0f, config.theme->colors[COLOR_TEXT]);
 		}
-		//DrawRectangleRounded((Rectangle) {osk.buttons[i].box_position.x, osk.buttons[i].box_position.y, osk.buttons[i].box_size.x, osk.buttons[i].box_size.y}, 0.5f, 8, config.theme->hover);
-	
-	
-	
-		//DrawRectangleRounded((Rectangle) {osk.buttons[i].box_position.x, osk.buttons[i].box_position.y, osk.buttons[i].box_size.x, osk.key_height}, 0.5f, 8, config.theme->text);
 	}
 }
 
@@ -60,9 +90,8 @@ void update_keyboard() {
 		osk.page = 0;
 	}
 	osk.page_index = osk.page * osk.keys_per_page;
-	
 	float max_width = window.width * 0.98f;
-	float max_height = window.height * 0.5f;
+	float max_height = window.height * 0.48f;
 	osk.width = max_width;
 	osk.height = max_height;
 	osk.key_width = osk.width / osk.columns;
@@ -71,8 +100,9 @@ void update_keyboard() {
 	int codepoints_count;
 	int* codepoints = LoadCodepoints(keyboard_codepoints, &codepoints_count);
 	osk.font = LoadFontFromMemory(".otf", unifont_otf, unifont_otf_len, osk.key_height, codepoints, codepoints_count);
+	UnloadCodepoints(codepoints);
 	SetTextureFilter(osk.font.texture, TEXTURE_FILTER_BILINEAR);
-	const char* biggest_char;
+	const char* biggest_char = NULL;
 	float width = 0;
 	for (uint16_t c = 0; c < osk.letter_count; c++) {
 		float check_width = MeasureTextEx(osk.font, keyboard_letters[c], osk.key_height, 0.0f).x;
@@ -90,21 +120,39 @@ void update_keyboard() {
 	}
 	osk.key_width = width;
 	osk.x = (window.width / 2) - (osk.width / 2);
-	osk.y = window.height - osk.height;
+	osk.y = window.height - osk.height - (osk.height * 0.02f);
+	
+	
+	
+	
+	
 	osk.font_size = osk.key_height * 0.7f;
-	float border = osk.key_width * 0.05f;
+	float border = osk.key_width * 0.04f;
 	osk.background_size.x = osk.key_width - (border * 2);
 	osk.background_size.y = osk.key_height - (border * 2);
 	unload_font(osk.font);
 	codepoints = LoadCodepoints(keyboard_codepoints, &codepoints_count);
 	osk.font = LoadFontFromMemory(".otf", unifont_otf, unifont_otf_len, osk.font_size, codepoints, codepoints_count);
+	UnloadCodepoints(codepoints);
 	SetTextureFilter(osk.font.texture, TEXTURE_FILTER_BILINEAR);
+	
+	
+	osk.inputbox_size.x = osk.width;
+	osk.inputbox_size.y = osk.key_height;
+	osk.inputbox_position.x = osk.x;
+	osk.inputbox_position.y = osk.y - osk.inputbox_size.y;
+	osk.cursor_position.y = osk.inputbox_position.y + ((osk.inputbox_size.y - osk.font_size) / 2);
+	osk.cursor_size.x = osk.key_width * 0.06f;
+	osk.cursor_size.y = osk.font_size;
+	measure_input();
+	
+	
 	int row_index, index;
 	for (uint8_t r = 0; r < osk.rows; r++) {
 		row_index = r * osk.columns;
 		for (uint8_t c = 0; c < osk.columns; c++) {
 			index = osk.page_index + row_index + c;
-			if (index > osk.letter_count) {
+			if (index >= osk.letter_count) {
 				break;
 			}
 			osk.letters[index].letter_size = MeasureTextEx(osk.font, keyboard_letters[index], osk.font_size, 0.0f);
@@ -137,9 +185,79 @@ void update_keyboard() {
 	}
 }
 
+static void page_back() {
+	osk.buttons[0].clicked = true;
+	if (osk.page - 1 == -1) {
+		osk.page = osk.pages - 1;
+	} else {
+		osk.page--;
+	}
+	update_keyboard();
+}
+static void page_forward() {
+	osk.buttons[1].clicked = true;
+	if (osk.page + 1 == osk.pages) {
+		osk.page = 0;
+	} else {
+		osk.page++;
+	}
+	update_keyboard();
+}
+static void clear() {
+	osk.input_count = 0;
+}
+static void close() {
+}
+static void space() {
+}
+static void submit() {
+	osk.buttons[6].clicked = true;
+}
+
+
+void add_input(const char *key) {
+    if (osk.input_count >= MAX_NAME_LENGTH) {
+        play_sound(SOUND_INVALID);
+        return;
+    }
+    int count = 0;
+    int codepoint = GetCodepointNext(key, &count);
+    if (codepoint == 0) {
+        play_sound(SOUND_INVALID);
+        return;
+    }
+    
+    osk.input[osk.input_count] = codepoint;
+    osk.input_count++;
+    measure_input();
+}
+
+
+static void add_keyboard_input() {
+	int key = GetCharPressed();
+	if (osk.input_count < MAX_NAME_LENGTH) {
+		while (key > 0) {
+			printf("Got keyboard input: %i\n", (char) key);
+			osk.input[osk.input_count] = (char) key;
+			osk.input[osk.input_count + 1] = '\0';
+			osk.input_count++;
+			key = GetCharPressed();
+		}
+		measure_input();
+	}
+}
+static void remove_input() {
+	if (osk.input_count > 0) {
+        osk.input_count--;
+    } else {
+        play_sound(SOUND_INVALID);
+    }
+    measure_input();
+}
 
 void input_keyboard() {
-	//if (osk.index != UI_NOSELECTION && (osk.index < osk.page_index || osk.index > osk.page_index + osk.keys_per_page)) {
+	add_keyboard_input();
+	//(osk.index < osk.page_index || osk.index > osk.page_index + osk.keys_per_page)) {
 		//osk.index = 0;
 	//}
 	if (mouse_moving) {
@@ -198,11 +316,14 @@ void input_keyboard() {
 		
 	}
 	if (input_device == DEVICE_GAMEPAD || input_device == DEVICE_KEYBOARD) {
+		if (osk.index == UI_NOSELECTION || osk.index > osk.letter_count + osk.button_count - 1) {
+			osk.index = osk.page_index;
+		} else if ((osk.index < osk.page_index || osk.index > osk.page_index + osk.keys_per_page) && (osk.index < osk.letter_count)) {
+			uint8_t index = osk.index % osk.keys_per_page;
+			osk.index = index + osk.page_index;
+		}
 		if (!osk.hover) {
 			osk.hover = true;
-		}
-		if (osk.index == UI_NOSELECTION || osk.index > osk.letter_count + osk.buttons - 1) {
-			osk.index = osk.page_index;
 		}
 		if (osk.index < osk.letter_count) {
 			if (!osk.letters[osk.index].hover) {
@@ -229,101 +350,150 @@ void input_keyboard() {
 	
 	if (osk.hover && osk.index != UI_NOSELECTION && is_pressed(INPUT_A)) {
 		if (osk.index < osk.letter_count) {
-			osk.letters[osk.index].click = true;
+			printf("Clicked: %s\n", keyboard_letters[osk.index]);
+			osk.letters[osk.index].clicked = true;
+			add_input(keyboard_letters[osk.index]);
 		} else {
-			osk.buttons[osk.index - osk.letter_count].click = true;
+			printf("Clicked: %s\n", osk.buttons[osk.index - osk.letter_count].letter);
+			osk.buttons[osk.index - osk.letter_count].clicked = true;
+			osk.buttons[osk.index - osk.letter_count].click();
 		}
 	}
 	
-	
+	// i hate this code but i couldnt figure out the best way to create a grid of different struct and different sizes
 	if (is_pressed(INPUT_DOWN)) {
-		uint8_t index = osk.index % osk.keys_per_page;
-		if (index + osk.columns >= osk.keys_per_page) {
-			osk.index -= osk.columns * (osk.rows - 1);
+		if (osk.index >= osk.letter_count) {
+			if (osk.index == osk.letter_count) {
+				osk.index = 0 + osk.page_index;
+			} else if (osk.index == osk.letter_count + 1) {
+				osk.index = 2 + osk.page_index;
+			} else if (osk.index == osk.letter_count + 2) {
+				osk.index = 5 + osk.page_index;
+			} else if (osk.index == osk.letter_count + 3) {
+				osk.index = 8 + osk.page_index;
+			} else if (osk.index == osk.letter_count + 4) {
+				osk.index = osk.letter_count;
+			} else if (osk.index == osk.letter_count + 5) {
+				osk.index = osk.letter_count + 2;
+			} else if (osk.index == osk.letter_count + 6) {
+				osk.index = osk.letter_count + 3;
+			}
 		} else {
-			osk.index += osk.columns;
+			uint8_t index = osk.index % osk.keys_per_page;
+			if (index > 29 && index < 33) {
+				osk.index = osk.letter_count + 4;
+			} else if (index > 32 && index < 37) {
+				osk.index = osk.letter_count + 5;
+			} else if (index > 36 && index < osk.keys_per_page) {
+				osk.index = osk.letter_count + 6;
+			} else {
+				osk.index += osk.columns;
+			}
 		}
 	}
 	if (is_pressed(INPUT_UP)) {
-		uint8_t index = osk.index % osk.keys_per_page;
-		if (index - osk.columns < 0) {
-			osk.index += osk.columns * (osk.rows - 1);
+		if (osk.index >= osk.letter_count) {
+			if (osk.index == osk.letter_count) {
+				osk.index = osk.letter_count + 4;
+			} else if (osk.index == osk.letter_count + 1 || osk.index == osk.letter_count + 2) {
+				osk.index = osk.letter_count + 5;
+			} else if (osk.index == osk.letter_count + 3) {
+				osk.index = osk.letter_count + 6;
+			} else if (osk.index == osk.letter_count + 4) {
+				osk.index = 31 + osk.page_index;
+			} else if (osk.index == osk.letter_count + 5) {
+				osk.index = 34 + osk.page_index;
+			} else if (osk.index == osk.letter_count + 6) {
+				osk.index = 38 + osk.page_index;
+			}
 		} else {
-			osk.index -= osk.columns;
+			uint8_t index = osk.index % osk.keys_per_page;
+			if (index < 2) {
+				osk.index = osk.letter_count;
+			} else if (index > 1 && index < 4) {
+				osk.index = osk.letter_count + 1;
+			} else if (index > 3 && index < 7) {
+				osk.index = osk.letter_count + 2;
+			} else if (index > 6 && index < 10) {
+				osk.index = osk.letter_count + 3;
+			} else {
+				if (index - osk.columns < 0) {
+					osk.index += osk.columns * (osk.rows - 1);
+				} else {
+					osk.index -= osk.columns;
+				}
+			}
 		}
 	}
 	if (is_pressed(INPUT_LEFT)) {
-		if (osk.index % osk.columns == 0) {
-			osk.index += osk.columns - 1;
+		if (osk.index == osk.letter_count) {
+			osk.index = osk.letter_count + 3;
+		} else if (osk.index == osk.letter_count + 4) {
+			osk.index = osk.letter_count + 6;
 		} else {
-			osk.index -= 1;
+			if (osk.index % osk.columns == 0) {
+				osk.index += osk.columns - 1;
+			} else {
+				osk.index -= 1;
+			}
 		}
 	}
 	if (is_pressed(INPUT_RIGHT)) {
-		if ((osk.index + 1) % osk.columns == 0) {
-			osk.index -= osk.columns - 1;
+		if (osk.index == osk.letter_count + 3) {
+			osk.index = osk.letter_count;
+		} else if (osk.index == osk.letter_count + 6) {
+			osk.index = osk.letter_count + 4;
 		} else {
-			osk.index += 1;
+			if ((osk.index + 1) % osk.columns == 0) {
+				osk.index -= osk.columns - 1;
+			} else {
+				osk.index += 1;
+			}
 		}
 	}
+	
 	if (is_pressed(INPUT_X)) {
-		osk.buttons[0].click = true;
-		if (osk.page - 1 == -1) {
-			osk.page = osk.pages - 1;
-			osk.index += osk.page * osk.keys_per_page;
-			//osk.index = osk.index % osk.keys_per_page;
-		} else {
-			osk.page--;
-			osk.index -= osk.keys_per_page;
-		}
-		update_keyboard();
+		page_back();
 	}
 	if (is_released(INPUT_X)) {
-		if (osk.buttons[0].click) {
-			osk.buttons[0].click = false;
+		if (osk.buttons[0].clicked) {
+			osk.buttons[0].clicked = false;
 		}
 	}
 	if (is_pressed(INPUT_Y)) {
-		osk.buttons[1].click = true;
-		if (osk.page + 1 == osk.pages) {
-			osk.page = 0;
-			osk.index = osk.index % osk.keys_per_page;
-		} else {
-			osk.page++;
-			osk.index += osk.keys_per_page;
-		}
-		update_keyboard();
+		page_forward();
 	}
 	if (is_released(INPUT_Y)) {
-		if (osk.buttons[1].click) {
-			osk.buttons[1].click = false;
+		if (osk.buttons[1].clicked) {
+			osk.buttons[1].clicked = false;
 		}
 	}
 	if (is_pressed(INPUT_START)) {
-		osk.buttons[6].click = true;
+		submit();
 	}
 	if (is_released(INPUT_START)) {
-		if (osk.buttons[6].click) {
-			osk.buttons[6].click = false;
+		if (osk.buttons[6].clicked) {
+			osk.buttons[6].clicked = false;
 		}
 	}
 	if (is_pressed(INPUT_B)) {
-		osk.buttons[3].click = true;
+		osk.buttons[3].clicked = true;
+		remove_input();
 	}
 	if (is_released(INPUT_B)) {
-		if (osk.buttons[3].click) {
-			osk.buttons[3].click = false;
+		if (osk.buttons[3].clicked) {
+			osk.buttons[3].clicked = false;
 		}
 	}
 	if (is_released(INPUT_A)) {
 		for (uint16_t i = osk.page_index; i < osk.page_index + osk.keys_per_page && i < osk.letter_count; i++) {
-			if (osk.letters[i].click) {
-				osk.letters[i].click = false;
+			if (osk.letters[i].clicked) {
+				osk.letters[i].clicked = false;
 			}
 		}
 		for (uint16_t i = 0; i < osk.button_count; i++) {
-			if (osk.buttons[i].click) {
-				osk.buttons[i].click = false;
+			if (osk.buttons[i].clicked) {
+				osk.buttons[i].clicked = false;
 			}
 		}
 	}
@@ -332,6 +502,16 @@ void input_keyboard() {
 	}
 	
 	
+}
+
+void init_keyboard() {
+	osk.buttons[0].click = page_back;
+	osk.buttons[1].click = page_forward;
+	osk.buttons[2].click = clear;
+	osk.buttons[3].click = remove_input;
+	osk.buttons[4].click = close;
+	osk.buttons[5].click = space;
+	osk.buttons[6].click = submit;
 }
 
 
@@ -467,13 +647,13 @@ void draw_element(struct ui_element* element) {
 				if (element->children[i]->type == UI_IMAGE && IsTextureValid(element->children[i]->image)) {
 					DrawTextureEx(element->children[i]->image, (Vector2) {element->children[i]->x, element->children[i]->y}, 0.0f, element->children[i]->s, WHITE);
 				} else if (element->children[i]->type == UI_TEXT || element->children[i]->type == UI_MENU_TEXT) {
-					DrawTextEx(element->font, element->children[i]->string[config.language], (Vector2) {(int)roundf(element->children[i]->x + (element->children[i]->h * 0.05f)), (int)roundf(element->children[i]->y + (element->children[i]->h * 0.05f))}, element->children[i]->s, 0.0f, config.theme->background);
+					DrawTextEx(element->font, element->children[i]->string[config.language], (Vector2) {(int)roundf(element->children[i]->x + (element->children[i]->h * 0.05f)), (int)roundf(element->children[i]->y + (element->children[i]->h * 0.05f))}, element->children[i]->s, 0.0f, config.theme->colors[COLOR_BACKGROUND]);
 					if (element->children[i]->hover && element->children[i]->v == UI_ACTIVE) {
-						DrawTextEx(element->font, element->children[i]->string[config.language], (Vector2) {element->children[i]->x, element->children[i]->y}, element->children[i]->s, 0.0f, config.theme->hover);
+						DrawTextEx(element->font, element->children[i]->string[config.language], (Vector2) {element->children[i]->x, element->children[i]->y}, element->children[i]->s, 0.0f, config.theme->colors[COLOR_HOVER]);
 					} else if (element->children[i]->v == UI_ACTIVE) {
-						DrawTextEx(element->font, element->children[i]->string[config.language], (Vector2) {element->children[i]->x, element->children[i]->y}, element->children[i]->s, 0.0f, config.theme->text);
+						DrawTextEx(element->font, element->children[i]->string[config.language], (Vector2) {element->children[i]->x, element->children[i]->y}, element->children[i]->s, 0.0f, config.theme->colors[COLOR_TEXT]);
 					} else if (element->children[i]->v == UI_DISABLED) {
-						DrawTextEx(element->font, element->children[i]->string[config.language], (Vector2) {element->children[i]->x, element->children[i]->y}, element->children[i]->s, 0.0f, config.theme->disabled);
+						DrawTextEx(element->font, element->children[i]->string[config.language], (Vector2) {element->children[i]->x, element->children[i]->y}, element->children[i]->s, 0.0f, config.theme->colors[COLOR_DISABLED]);
 					}
 					if (element->index == i && element->children[i]->type == UI_MENU_TEXT) {
 						float cursor_size = element->children[i]->h * 0.3f;
@@ -484,8 +664,8 @@ void draw_element(struct ui_element* element) {
 						float cursor_bottom_y = cursor_top_y + cursor_size;
 						float cursor_right_x = cursor_top_x + cursor_size;
 						float cursor_right_y = cursor_top_y + (cursor_size / 2);
-						DrawTriangle((Vector2) {cursor_top_x, cursor_top_y}, (Vector2) {cursor_bottom_x + (int)roundf(element->children[i]->h * 0.05f), cursor_bottom_y + (int)roundf(element->children[i]->h * 0.05f)}, (Vector2) {cursor_right_x, cursor_right_y}, config.theme->background);
-						DrawTriangle((Vector2) {cursor_top_x, cursor_top_y}, (Vector2) {cursor_bottom_x, cursor_bottom_y}, (Vector2) {cursor_right_x, cursor_right_y}, config.theme->text);
+						DrawTriangle((Vector2) {cursor_top_x, cursor_top_y}, (Vector2) {cursor_bottom_x + (int)roundf(element->children[i]->h * 0.05f), cursor_bottom_y + (int)roundf(element->children[i]->h * 0.05f)}, (Vector2) {cursor_right_x, cursor_right_y}, config.theme->colors[COLOR_BACKGROUND]);
+						DrawTriangle((Vector2) {cursor_top_x, cursor_top_y}, (Vector2) {cursor_bottom_x, cursor_bottom_y}, (Vector2) {cursor_right_x, cursor_right_y}, config.theme->colors[COLOR_BACKGROUND]);
 					}
 				}
 			}

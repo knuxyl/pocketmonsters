@@ -3,7 +3,7 @@ struct keyboard_letter {
 	Vector2 slot_position, background_position;
 	//Vector2 box_position;
 	bool hover;
-	bool click;
+	bool clicked;
 };
 struct keyboard_button {
 	const char* letter;
@@ -13,11 +13,10 @@ struct keyboard_button {
 	Vector2 letter_position, letter_size;
 	Vector2 slot_position, slot_size;
 	Vector2 background_position, background_size;
-	Color* color_text, color_text_hover, color_text_click;
-	Color* color_border, color_border_hover, color_border_clicked;
-	Color* color_background, color_background_hover, color_background_clicked;
+	uint8_t color_background, color_click;
 	bool hover;
-	bool click;
+	bool clicked;
+	function_void* click;
 };
 const char* keyboard_letters[] = {
 	"a", "b", "c", "d", "e", "f", "g", "h", "i", "j",
@@ -89,16 +88,21 @@ const char* keyboard_letters[] = {
 #define KEYBOARD_KEYS_PER_PAGE (KEYBOARD_ROWS * KEYBOARD_COLUMNS)
 
 struct keyboard_button keyboard_buttons[] = {
-	{.letter = "← ⓧ", .align = UI_TOP, .relation = 0, .space_width = 2, .index = KEYBOARD_LETTER_COUNT},
-	{.letter = "→ ⓨ", .align = UI_TOP, .relation = 2, .space_width = 2, .index = KEYBOARD_LETTER_COUNT + 1},
-	{.letter = "⎚", .align = UI_TOP, .relation = 4, .space_width = 3, .index = KEYBOARD_LETTER_COUNT + 2},
-	{.letter = "⌫ ⓑ", .align = UI_TOP, .relation = 7, .space_width = 3, .index = KEYBOARD_LETTER_COUNT + 3},
-	{.letter = "×", .align = UI_BOTTOM, .relation = 30, .space_width = 3, .index = KEYBOARD_LETTER_COUNT + 4},
-	{.letter = "␣", .align = UI_BOTTOM, .relation = 33, .space_width = 4, .index = KEYBOARD_LETTER_COUNT + 5},
-	{.letter = "↩ ⓢ", .align = UI_BOTTOM, .relation = 37, .space_width = 3, .index = KEYBOARD_LETTER_COUNT + 6}
+	{.letter = "← ⓧ", .align = UI_TOP, .relation = 0, .space_width = 2, .index = KEYBOARD_LETTER_COUNT,
+		.color_background = COLOR_BUTTON},
+	{.letter = "→ ⓨ", .align = UI_TOP, .relation = 2, .space_width = 2, .index = KEYBOARD_LETTER_COUNT + 1,
+		.color_background = COLOR_BUTTON},
+	{.letter = "⎚", .align = UI_TOP, .relation = 4, .space_width = 3, .index = KEYBOARD_LETTER_COUNT + 2,
+		.color_background = COLOR_INVALID},
+	{.letter = "⌫ ⓑ", .align = UI_TOP, .relation = 7, .space_width = 3, .index = KEYBOARD_LETTER_COUNT + 3,
+		.color_background = COLOR_INVALID},
+	{.letter = "×", .align = UI_BOTTOM, .relation = 30, .space_width = 3, .index = KEYBOARD_LETTER_COUNT + 4,
+		.color_background = COLOR_INVALID},
+	{.letter = "␣", .align = UI_BOTTOM, .relation = 33, .space_width = 4, .index = KEYBOARD_LETTER_COUNT + 5,
+		.color_background = COLOR_BACKGROUND, .color_click = COLOR_OK},
+	{.letter = "↩ ⓢ", .align = UI_BOTTOM, .relation = 37, .space_width = 3, .index = KEYBOARD_LETTER_COUNT + 6,
+		.color_background = COLOR_OK}
 };
-
-
 
 struct keyboard {
 	struct keyboard_letter letters[KEYBOARD_LETTER_COUNT];
@@ -111,6 +115,10 @@ struct keyboard {
 	float key_width, key_height, key_padding;
 	float border;
 	//Vector2 border_size;
+	int input[MAX_NAME_LENGTH];
+	uint8_t input_count;
+	char input_string[MAX_NAME_BYTES];
+	Vector2 inputbox_size, inputbox_position, input_size, input_position, cursor_size, cursor_position;
 	Vector2 background_size, box_offset;
 	uint8_t keys_per_page, rows, columns, pages, page;
 	uint16_t page_index, index;
@@ -119,6 +127,7 @@ struct keyboard {
 	bool click;
 	Font font;
 };
+
 struct keyboard osk = {
 	.buttons = keyboard_buttons,
 	.letter_count = KEYBOARD_LETTER_COUNT,
@@ -126,7 +135,9 @@ struct keyboard osk = {
 	.rows = KEYBOARD_ROWS,
 	.columns = KEYBOARD_COLUMNS,
 	.pages = KEYBOARD_PAGES,
-	.keys_per_page = KEYBOARD_KEYS_PER_PAGE
+	.keys_per_page = KEYBOARD_KEYS_PER_PAGE,
+	.input[MAX_NAME_LENGTH - 1] = '\0',
+	.input_count = 0,
 };
 
 

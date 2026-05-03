@@ -1,16 +1,19 @@
+#define MAX_NAME_LENGTH 14
+#define MAX_NAME_BYTES (MAX_NAME_LENGTH * 4 + 1)
+
 struct player_progress {
 	uint8_t stage;
 	// ...
 };
 
 struct player_public {
-    char* name;
+    char* name; // 24 characters or 96 bytes
 	unsigned char public[crypto_sign_PUBLICKEYBYTES];
 	unsigned char encrypt_public[crypto_box_PUBLICKEYBYTES];
 };
 
 struct player_private {
-    char* name;
+    char* name; // 24 characters or 96 bytes
 	unsigned char public[crypto_sign_PUBLICKEYBYTES];
 	unsigned char private[crypto_sign_SECRETKEYBYTES];
 	unsigned char encrypt_public[crypto_box_PUBLICKEYBYTES];
