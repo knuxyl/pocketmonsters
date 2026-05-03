@@ -538,10 +538,7 @@ void input_element(struct ui_element* element) {
 						}
 						element->children[element->index]->hover = true;
 						hover_element = true;
-						if (current_cursor != CURSOR_HAND) {
-							change_cursor(CURSOR_HAND);
-							//SetMouseCursor(mouse_cursor);
-						}
+						change_cursor(CURSOR_HAND);
 					}
 				}
 			}
@@ -555,10 +552,7 @@ void input_element(struct ui_element* element) {
 						element->children[i]->hover = false;
 					}
 				}
-				if (current_cursor != CURSOR_POINTER) {
-					change_cursor(CURSOR_POINTER);
-					//SetMouseCursor(mouse_cursor);
-				}
+				change_cursor(CURSOR_POINTER);
 			}
 		} else if (num_controllers > 0 && input_device == DEVICE_GAMEPAD) {
 			if (element->index == UI_NOSELECTION) {
@@ -649,7 +643,7 @@ void draw_element(struct ui_element* element) {
 				} else if (element->children[i]->type == UI_TEXT || element->children[i]->type == UI_MENU_TEXT) {
 					DrawTextEx(element->font, element->children[i]->string[config.language], (Vector2) {(int)roundf(element->children[i]->x + (element->children[i]->h * 0.05f)), (int)roundf(element->children[i]->y + (element->children[i]->h * 0.05f))}, element->children[i]->s, 0.0f, config.theme->colors[COLOR_BACKGROUND]);
 					if (element->children[i]->hover && element->children[i]->v == UI_ACTIVE) {
-						DrawTextEx(element->font, element->children[i]->string[config.language], (Vector2) {element->children[i]->x, element->children[i]->y}, element->children[i]->s, 0.0f, config.theme->colors[COLOR_HOVER]);
+						DrawTextEx(element->font, element->children[i]->string[config.language], (Vector2) {element->children[i]->x, element->children[i]->y}, element->children[i]->s, 0.0f, config.theme->colors[COLOR_TEXT]);
 					} else if (element->children[i]->v == UI_ACTIVE) {
 						DrawTextEx(element->font, element->children[i]->string[config.language], (Vector2) {element->children[i]->x, element->children[i]->y}, element->children[i]->s, 0.0f, config.theme->colors[COLOR_TEXT]);
 					} else if (element->children[i]->v == UI_DISABLED) {
@@ -665,7 +659,7 @@ void draw_element(struct ui_element* element) {
 						float cursor_right_x = cursor_top_x + cursor_size;
 						float cursor_right_y = cursor_top_y + (cursor_size / 2);
 						DrawTriangle((Vector2) {cursor_top_x, cursor_top_y}, (Vector2) {cursor_bottom_x + (int)roundf(element->children[i]->h * 0.05f), cursor_bottom_y + (int)roundf(element->children[i]->h * 0.05f)}, (Vector2) {cursor_right_x, cursor_right_y}, config.theme->colors[COLOR_BACKGROUND]);
-						DrawTriangle((Vector2) {cursor_top_x, cursor_top_y}, (Vector2) {cursor_bottom_x, cursor_bottom_y}, (Vector2) {cursor_right_x, cursor_right_y}, config.theme->colors[COLOR_BACKGROUND]);
+						DrawTriangle((Vector2) {cursor_top_x, cursor_top_y}, (Vector2) {cursor_bottom_x, cursor_bottom_y}, (Vector2) {cursor_right_x, cursor_right_y}, config.theme->colors[COLOR_TEXT]);
 					}
 				}
 			}
