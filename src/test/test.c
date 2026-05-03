@@ -252,6 +252,9 @@ void loop_test() {
 	if (IsKeyReleased(KEY_O)) {
 		stop_music();
 	};
+	if (IsKeyReleased(KEY_R)) {
+		ToggleFullscreen();
+	};
 	if (is_pressed(INPUT_RIGHT)) {
         uint16_t prev = test_number;
 		if ((test_number + 1) == db[test_region]->series[test_series]->sets[test_set]->card_count) {

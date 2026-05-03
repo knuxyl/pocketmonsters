@@ -19,11 +19,11 @@ struct onscreen_keyboard {
 	float y;
 	uint8_t page;
 	struct key keys[40];
-	struct key submit;
-	struct key cancel;
-	struct key space;
-	struct key backspace;
-	uint8_t language;
+	struct key buttons[6];
+	uint8_t row_count;
+	uint8_t column_count;
+	uint8_t key_count;
+	uint8_t button_count;
 	uint16_t index;
 	Font font;
 };

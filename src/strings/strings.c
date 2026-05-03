@@ -2,6 +2,7 @@
 #include "pokemon_names.c"
 #include "title.c"
 #include "codepoints.c"
+#include "keyboard.c"
 
 // test strings
 

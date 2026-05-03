@@ -8,7 +8,7 @@ struct cursor {
 };
 struct cursor cursors[CURSOR];
 struct cursor* mouse_cursor;
-uint8_t current_cursor;
+uint8_t current_cursor = CURSOR_POINTER;
 
 
 
@@ -17,7 +17,7 @@ void update_mouse() {
 }
 
 void change_cursor(uint8_t cursor) {
-	if (cursor < CURSOR) {
+	if (current_cursor != cursor) {
 		mouse_cursor = &cursors[cursor];
 		current_cursor = cursor;
 	}
@@ -31,8 +31,8 @@ void loop_mouse() {
 void init_mouse() {
 	HideCursor();
 	cursors[CURSOR_POINTER].image = LoadImageFromMemory(".png", pointer_png, pointer_png_len);
-	cursors[CURSOR_POINTER].texture = LoadTextureFromImage(cursors[0].image);
+	cursors[CURSOR_POINTER].texture = LoadTextureFromImage(cursors[CURSOR_POINTER].image);
 	cursors[CURSOR_HAND].image = LoadImageFromMemory(".png", hand_png, hand_png_len);
-	cursors[CURSOR_HAND].texture = LoadTextureFromImage(cursors[1].image);
-	change_cursor(CURSOR_POINTER);
+	cursors[CURSOR_HAND].texture = LoadTextureFromImage(cursors[CURSOR_HAND].image);
+	mouse_cursor = &cursors[CURSOR_POINTER];
 }
