@@ -36,13 +36,16 @@ static void measure_input() {
 
 void draw_keyboard() {
 	cursor_timer = cursor_timer + dt;		
-	if (cursor_timer >= 0.75 && cursor_timer < 1.5) {
+	if (cursor_timer >= 0.5 && cursor_timer < 1.0) {
 		cursor_color = TRANSPARENT;
-	} else if (cursor_timer > 1.5) {
+	} else if (cursor_timer > 1.0) {
 		cursor_timer = 0;
 		cursor_color = get_color(COLOR_TEXT);
 	}
-	DrawRectangle(0, 0, window.width, window.height, transparent_color(COLOR_TEXT, 128));
+	DrawRectangle(0, 0, window.width, window.height, (Color) {0,0,0,128});
+	
+	DrawRectangleRounded((Rectangle) {osk.x, osk.y, osk.width, osk.height}, 0.1f, 8, transparent_color(COLOR_TEXT, 64));
+	
 	DrawRectangleRounded((Rectangle) {osk.inputbox_position.x, osk.inputbox_position.y, osk.inputbox_size.x, osk.inputbox_size.y}, 0.5f, 8, get_color(COLOR_BACKGROUND));
 	DrawTextEx(osk.font, osk.input_string, osk.input_position, osk.font_size, 0.0f, get_color(COLOR_TEXT));
 	DrawRectangle(osk.cursor_position.x, osk.cursor_position.y, osk.cursor_size.x, osk.cursor_size.y, cursor_color);
@@ -137,9 +140,9 @@ void update_keyboard() {
 	SetTextureFilter(osk.font.texture, TEXTURE_FILTER_BILINEAR);
 	
 	
-	osk.inputbox_size.x = osk.width;
+	osk.inputbox_size.x = osk.width - (border * 2);
 	osk.inputbox_size.y = osk.key_height;
-	osk.inputbox_position.x = osk.x;
+	osk.inputbox_position.x = osk.x + border;
 	osk.inputbox_position.y = osk.y - osk.inputbox_size.y - border;
 	osk.cursor_position.y = osk.inputbox_position.y + ((osk.inputbox_size.y - osk.font_size) / 2);
 	osk.cursor_size.x = osk.key_width * 0.06f;

@@ -142,7 +142,7 @@ void init_title() {
 	logo_image = LoadImageFromMemory(".png", logo_png, logo_png_len);
 	logo_child.image = LoadTextureFromImage(logo_image);
 	GenTextureMipmaps(&logo_child.image);
-	SetTextureFilter(logo_child.image, config.filter);
+	SetTextureFilter(logo_child.image, TEXTURE_FILTER_POINT);
 	background_image = LoadImageFromMemory(".png", title_background_png, title_background_png_len);
 	background_scale = window.height / background_image.height;
 	ImageResize(&background_image, (int)(background_image.width * background_scale), (int)(background_image.height * background_scale));
