@@ -19,6 +19,7 @@
 - Most testing goes in src/test/test.c
 - Currently focusing on keyboard for name input so I can move onto tilemap
 ![Alt text](https://github.com/knuxyl/pocketmonsters/blob/master/images/progress.png?raw=true "Progress")
+![Alt text](https://github.com/knuxyl/pocketmonsters/blob/master/images/mobile.png?raw=true "Mobile Aspect")
 
 # Notable competing project
 This project uses Godot so will have much more rapid development and quick cross platform releases.
@@ -37,7 +38,7 @@ This project uses Godot so will have much more rapid development and quick cross
 	- [x] Menus
 	- [ ] Boxed dialogue/questions
 	- [ ] Onscreen Keyboard
-		- English + Japanese (No Kanji)
+		- English, Japanese (No Kanji), German, French, Spanish, Italian
 - [x] Multilingual support
 	- English, Japanese, German, French, Spanish, Italian, Korean, Chinese Simplified, and Chinese
 	- GNU unifont
