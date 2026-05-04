@@ -1,5 +1,6 @@
 struct config config = {
-	.theme = &themes[DARK_THEME],
+	.theme = THEME_DRAGONITE,
+	.mode = THEME_DARK,
 	.language = JAPANESE,
 	.game_audio = GAME_PMCG2,
 	.measurement = IMPERIAL,

@@ -13,7 +13,7 @@ struct keyboard_button {
 	Vector2 letter_position, letter_size;
 	Vector2 slot_position, slot_size;
 	Vector2 background_position, background_size;
-	uint8_t color_background, color_click;
+	//uint8_t color_background, color_click;
 	bool hover;
 	bool clicked;
 	function_void* click;
@@ -88,20 +88,13 @@ const char* keyboard_letters[] = {
 #define KEYBOARD_KEYS_PER_PAGE (KEYBOARD_ROWS * KEYBOARD_COLUMNS)
 
 struct keyboard_button keyboard_buttons[] = {
-	{.letter = "← ⓧ", .align = UI_TOP, .relation = 0, .space_width = 2, .index = KEYBOARD_LETTER_COUNT,
-		.color_background = COLOR_BUTTON},
-	{.letter = "→ ⓨ", .align = UI_TOP, .relation = 2, .space_width = 2, .index = KEYBOARD_LETTER_COUNT + 1,
-		.color_background = COLOR_BUTTON},
-	{.letter = "⎚", .align = UI_TOP, .relation = 4, .space_width = 3, .index = KEYBOARD_LETTER_COUNT + 2,
-		.color_background = COLOR_INVALID},
-	{.letter = "⌫ ⓑ", .align = UI_TOP, .relation = 7, .space_width = 3, .index = KEYBOARD_LETTER_COUNT + 3,
-		.color_background = COLOR_INVALID},
-	{.letter = "×", .align = UI_BOTTOM, .relation = 30, .space_width = 3, .index = KEYBOARD_LETTER_COUNT + 4,
-		.color_background = COLOR_INVALID},
-	{.letter = "␣", .align = UI_BOTTOM, .relation = 33, .space_width = 4, .index = KEYBOARD_LETTER_COUNT + 5,
-		.color_background = COLOR_BACKGROUND, .color_click = COLOR_OK},
-	{.letter = "↩ ⓢ", .align = UI_BOTTOM, .relation = 37, .space_width = 3, .index = KEYBOARD_LETTER_COUNT + 6,
-		.color_background = COLOR_OK}
+	{.letter = "← ⓧ", .align = UI_TOP, .relation = 0, .space_width = 2, .index = KEYBOARD_LETTER_COUNT},
+	{.letter = "→ ⓨ", .align = UI_TOP, .relation = 2, .space_width = 2, .index = KEYBOARD_LETTER_COUNT + 1},
+	{.letter = "⎚", .align = UI_TOP, .relation = 4, .space_width = 3, .index = KEYBOARD_LETTER_COUNT + 2},
+	{.letter = "⌫ ⓑ", .align = UI_TOP, .relation = 7, .space_width = 3, .index = KEYBOARD_LETTER_COUNT + 3},
+	{.letter = "×", .align = UI_BOTTOM, .relation = 30, .space_width = 3, .index = KEYBOARD_LETTER_COUNT + 4},
+	{.letter = "␣", .align = UI_BOTTOM, .relation = 33, .space_width = 4, .index = KEYBOARD_LETTER_COUNT + 5},
+	{.letter = "↩ ⓢ", .align = UI_BOTTOM, .relation = 37, .space_width = 3, .index = KEYBOARD_LETTER_COUNT + 6}
 };
 
 struct keyboard {

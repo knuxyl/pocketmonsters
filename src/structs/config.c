@@ -1,5 +1,6 @@
 struct config {
-	const struct theme* theme;
+	uint8_t theme;
+	uint8_t mode;
 	uint8_t language;
 	uint16_t game_audio;
 	uint8_t measurement;

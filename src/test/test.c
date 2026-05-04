@@ -238,16 +238,24 @@ void loop_test() {
 		mute();
 	}
 	if (IsKeyReleased(KEY_D)) {
-		change_theme(DARK_THEME);
+		if (config.mode == THEME_DARK) {
+			change_mode(THEME_LIGHT);
+		} else {
+			change_mode(THEME_DARK);
+		}
 	};
 	if (IsKeyReleased(KEY_F)) {
-		change_theme(LIGHT_THEME);
+		if (config.theme + 1 < THEMES) {
+			config.theme += 1;
+		} else {
+			config.theme = 0;
+		}
 	};
 	if (IsKeyReleased(KEY_G)) {
-		change_theme(GB_DARK_THEME);
+		//change_theme(GB_DARK_THEME);
 	};
 	if (IsKeyReleased(KEY_H)) {
-		change_theme(GB_LIGHT_THEME);
+		//change_theme(GB_LIGHT_THEME);
 	};
 	if (IsKeyReleased(KEY_O)) {
 		stop_music();

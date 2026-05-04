@@ -40,40 +40,40 @@ void draw_keyboard() {
 		cursor_color = TRANSPARENT;
 	} else if (cursor_timer > 1.5) {
 		cursor_timer = 0;
-		cursor_color = config.theme->colors[COLOR_TEXT];
+		cursor_color = get_color(COLOR_TEXT);
 	}
-	DrawRectangle(0, 0, window.width, window.height, config.theme->colors[COLOR_TR_TEXT]);
-	DrawRectangleRounded((Rectangle) {osk.inputbox_position.x, osk.inputbox_position.y, osk.inputbox_size.x, osk.inputbox_size.y}, 0.5f, 8, config.theme->colors[COLOR_BACKGROUND]);
-	DrawTextEx(osk.font, osk.input_string, osk.input_position, osk.font_size, 0.0f, config.theme->colors[COLOR_TEXT]);
+	DrawRectangle(0, 0, window.width, window.height, transparent_color(COLOR_TEXT, 128));
+	DrawRectangleRounded((Rectangle) {osk.inputbox_position.x, osk.inputbox_position.y, osk.inputbox_size.x, osk.inputbox_size.y}, 0.5f, 8, get_color(COLOR_BACKGROUND));
+	DrawTextEx(osk.font, osk.input_string, osk.input_position, osk.font_size, 0.0f, get_color(COLOR_TEXT));
 	DrawRectangle(osk.cursor_position.x, osk.cursor_position.y, osk.cursor_size.x, osk.cursor_size.y, cursor_color);
 	for (uint16_t i = osk.page_index; i < osk.page_index + osk.keys_per_page && i < osk.letter_count; i++) {
 		if (osk.letters[i].clicked) {
-			//DrawRectangleRounded((Rectangle) {osk.letters[i].slot_position.x, osk.letters[i].slot_position.y, osk.key_width, osk.key_height}, 0.5f, 8, config.theme->colors[COLOR_TEXT]);
-			DrawRectangleRounded((Rectangle) {osk.letters[i].background_position.x, osk.letters[i].background_position.y, osk.background_size.x, osk.background_size.y}, 0.5f, 8, config.theme->colors[COLOR_OK]);
-			DrawTextEx(osk.font, keyboard_letters[i], osk.letters[i].letter_position, osk.font_size, 0.0f, config.theme->colors[COLOR_TEXT]);
+			//DrawRectangleRounded((Rectangle) {osk.letters[i].slot_position.x, osk.letters[i].slot_position.y, osk.key_width, osk.key_height}, 0.5f, 8, get_color(COLOR_TEXT));
+			DrawRectangleRounded((Rectangle) {osk.letters[i].background_position.x, osk.letters[i].background_position.y, osk.background_size.x, osk.background_size.y}, 0.5f, 8, get_color(COLOR_SELECT));
+			DrawTextEx(osk.font, keyboard_letters[i], osk.letters[i].letter_position, osk.font_size, 0.0f, get_color(COLOR_TEXT));
 		} else if (osk.letters[i].hover) {
-			//DrawRectangleRounded((Rectangle) {osk.letters[i].slot_position.x, osk.letters[i].slot_position.y, osk.key_width, osk.key_height}, 0.5f, 8, config.theme->colors[COLOR_BACKGROUND]);
-			DrawRectangleRounded((Rectangle) {osk.letters[i].background_position.x, osk.letters[i].background_position.y, osk.background_size.x, osk.background_size.y}, 0.5f, 8, config.theme->colors[COLOR_TEXT]);
-			DrawTextEx(osk.font, keyboard_letters[i], osk.letters[i].letter_position, osk.font_size, 0.0f, config.theme->colors[COLOR_BACKGROUND]);
+			//DrawRectangleRounded((Rectangle) {osk.letters[i].slot_position.x, osk.letters[i].slot_position.y, osk.key_width, osk.key_height}, 0.5f, 8, get_color(COLOR_BACKGROUND));
+			DrawRectangleRounded((Rectangle) {osk.letters[i].background_position.x, osk.letters[i].background_position.y, osk.background_size.x, osk.background_size.y}, 0.5f, 8, get_color(COLOR_TEXT));
+			DrawTextEx(osk.font, keyboard_letters[i], osk.letters[i].letter_position, osk.font_size, 0.0f, get_color(COLOR_BACKGROUND));
 		} else {
-			//DrawRectangleRounded((Rectangle) {osk.letters[i].slot_position.x, osk.letters[i].slot_position.y, osk.key_width, osk.key_height}, 0.5f, 8, config.theme->colors[COLOR_TEXT]);
-			DrawRectangleRounded((Rectangle) {osk.letters[i].background_position.x, osk.letters[i].background_position.y, osk.background_size.x, osk.background_size.y}, 0.5f, 8, config.theme->colors[COLOR_BACKGROUND]);
-			DrawTextEx(osk.font, keyboard_letters[i], osk.letters[i].letter_position, osk.font_size, 0.0f, config.theme->colors[COLOR_TEXT]);
+			//DrawRectangleRounded((Rectangle) {osk.letters[i].slot_position.x, osk.letters[i].slot_position.y, osk.key_width, osk.key_height}, 0.5f, 8, get_color(COLOR_TEXT));
+			DrawRectangleRounded((Rectangle) {osk.letters[i].background_position.x, osk.letters[i].background_position.y, osk.background_size.x, osk.background_size.y}, 0.5f, 8, get_color(COLOR_BACKGROUND));
+			DrawTextEx(osk.font, keyboard_letters[i], osk.letters[i].letter_position, osk.font_size, 0.0f, get_color(COLOR_TEXT));
 		}
 	}
 	for (uint8_t i = 0; i < osk.button_count; i++) {
 		if (osk.buttons[i].clicked) {
-			//DrawRectangleRounded((Rectangle) {osk.buttons[i].slot_position.x, osk.buttons[i].slot_position.y, osk.buttons[i].slot_size.x, osk.buttons[i].slot_size.y}, 0.5f, 8, config.theme->colors[COLOR_TEXT]);
-			DrawRectangleRounded((Rectangle) {osk.buttons[i].background_position.x, osk.buttons[i].background_position.y, osk.buttons[i].background_size.x, osk.buttons[i].background_size.y}, 0.5f, 8, config.theme->colors[COLOR_OK]);
-			DrawTextEx(osk.font, osk.buttons[i].letter, osk.buttons[i].letter_position, osk.font_size, 0.0f, config.theme->colors[COLOR_TEXT]);
+			//DrawRectangleRounded((Rectangle) {osk.buttons[i].slot_position.x, osk.buttons[i].slot_position.y, osk.buttons[i].slot_size.x, osk.buttons[i].slot_size.y}, 0.5f, 8, get_color(COLOR_TEXT));
+			DrawRectangleRounded((Rectangle) {osk.buttons[i].background_position.x, osk.buttons[i].background_position.y, osk.buttons[i].background_size.x, osk.buttons[i].background_size.y}, 0.5f, 8, get_color(COLOR_SELECT));
+			DrawTextEx(osk.font, osk.buttons[i].letter, osk.buttons[i].letter_position, osk.font_size, 0.0f, get_color(COLOR_TEXT));
 		} else if (osk.buttons[i].hover) {
-			//DrawRectangleRounded((Rectangle) {osk.buttons[i].slot_position.x, osk.buttons[i].slot_position.y, osk.buttons[i].slot_size.x, osk.buttons[i].slot_size.y}, 0.5f, 8, config.theme->colors[COLOR_BACKGROUND]);
-			DrawRectangleRounded((Rectangle) {osk.buttons[i].background_position.x, osk.buttons[i].background_position.y, osk.buttons[i].background_size.x, osk.buttons[i].background_size.y}, 0.5f, 8, config.theme->colors[COLOR_TEXT]);
-			DrawTextEx(osk.font, osk.buttons[i].letter, osk.buttons[i].letter_position, osk.font_size, 0.0f, config.theme->colors[COLOR_BACKGROUND]);
+			//DrawRectangleRounded((Rectangle) {osk.buttons[i].slot_position.x, osk.buttons[i].slot_position.y, osk.buttons[i].slot_size.x, osk.buttons[i].slot_size.y}, 0.5f, 8, get_color(COLOR_BACKGROUND));
+			DrawRectangleRounded((Rectangle) {osk.buttons[i].background_position.x, osk.buttons[i].background_position.y, osk.buttons[i].background_size.x, osk.buttons[i].background_size.y}, 0.5f, 8, get_color(COLOR_TEXT));
+			DrawTextEx(osk.font, osk.buttons[i].letter, osk.buttons[i].letter_position, osk.font_size, 0.0f, get_color(COLOR_BACKGROUND));
 		} else {
-			//DrawRectangleRounded((Rectangle) {osk.buttons[i].slot_position.x, osk.buttons[i].slot_position.y, osk.buttons[i].slot_size.x, osk.buttons[i].slot_size.y}, 0.5f, 8, config.theme->colors[COLOR_TEXT]);
-			DrawRectangleRounded((Rectangle) {osk.buttons[i].background_position.x, osk.buttons[i].background_position.y, osk.buttons[i].background_size.x, osk.buttons[i].background_size.y}, 0.5f, 8, config.theme->colors[osk.buttons[i].color_background]);
-			DrawTextEx(osk.font, osk.buttons[i].letter, osk.buttons[i].letter_position, osk.font_size, 0.0f, config.theme->colors[COLOR_TEXT]);
+			//DrawRectangleRounded((Rectangle) {osk.buttons[i].slot_position.x, osk.buttons[i].slot_position.y, osk.buttons[i].slot_size.x, osk.buttons[i].slot_size.y}, 0.5f, 8, get_color(COLOR_TEXT));
+			DrawRectangleRounded((Rectangle) {osk.buttons[i].background_position.x, osk.buttons[i].background_position.y, osk.buttons[i].background_size.x, osk.buttons[i].background_size.y}, 0.5f, 8, get_color(COLOR_BACKGROUND));
+			DrawTextEx(osk.font, osk.buttons[i].letter, osk.buttons[i].letter_position, osk.font_size, 0.0f, get_color(COLOR_TEXT));
 		}
 	}
 }
@@ -140,7 +140,7 @@ void update_keyboard() {
 	osk.inputbox_size.x = osk.width;
 	osk.inputbox_size.y = osk.key_height;
 	osk.inputbox_position.x = osk.x;
-	osk.inputbox_position.y = osk.y - osk.inputbox_size.y;
+	osk.inputbox_position.y = osk.y - osk.inputbox_size.y - border;
 	osk.cursor_position.y = osk.inputbox_position.y + ((osk.inputbox_size.y - osk.font_size) / 2);
 	osk.cursor_size.x = osk.key_width * 0.06f;
 	osk.cursor_size.y = osk.font_size;
@@ -641,13 +641,13 @@ void draw_element(struct ui_element* element) {
 				if (element->children[i]->type == UI_IMAGE && IsTextureValid(element->children[i]->image)) {
 					DrawTextureEx(element->children[i]->image, (Vector2) {element->children[i]->x, element->children[i]->y}, 0.0f, element->children[i]->s, WHITE);
 				} else if (element->children[i]->type == UI_TEXT || element->children[i]->type == UI_MENU_TEXT) {
-					DrawTextEx(element->font, element->children[i]->string[config.language], (Vector2) {(int)roundf(element->children[i]->x + (element->children[i]->h * 0.05f)), (int)roundf(element->children[i]->y + (element->children[i]->h * 0.05f))}, element->children[i]->s, 0.0f, config.theme->colors[COLOR_BACKGROUND]);
+					DrawTextEx(element->font, element->children[i]->string[config.language], (Vector2) {(int)roundf(element->children[i]->x + (element->children[i]->h * 0.05f)), (int)roundf(element->children[i]->y + (element->children[i]->h * 0.05f))}, element->children[i]->s, 0.0f, get_color(COLOR_BACKGROUND));
 					if (element->children[i]->hover && element->children[i]->v == UI_ACTIVE) {
-						DrawTextEx(element->font, element->children[i]->string[config.language], (Vector2) {element->children[i]->x, element->children[i]->y}, element->children[i]->s, 0.0f, config.theme->colors[COLOR_TEXT]);
+						DrawTextEx(element->font, element->children[i]->string[config.language], (Vector2) {element->children[i]->x, element->children[i]->y}, element->children[i]->s, 0.0f, get_color(COLOR_TEXT));
 					} else if (element->children[i]->v == UI_ACTIVE) {
-						DrawTextEx(element->font, element->children[i]->string[config.language], (Vector2) {element->children[i]->x, element->children[i]->y}, element->children[i]->s, 0.0f, config.theme->colors[COLOR_TEXT]);
+						DrawTextEx(element->font, element->children[i]->string[config.language], (Vector2) {element->children[i]->x, element->children[i]->y}, element->children[i]->s, 0.0f, get_color(COLOR_TEXT));
 					} else if (element->children[i]->v == UI_DISABLED) {
-						DrawTextEx(element->font, element->children[i]->string[config.language], (Vector2) {element->children[i]->x, element->children[i]->y}, element->children[i]->s, 0.0f, config.theme->colors[COLOR_DISABLED]);
+						DrawTextEx(element->font, element->children[i]->string[config.language], (Vector2) {element->children[i]->x, element->children[i]->y}, element->children[i]->s, 0.0f, get_color(COLOR_INVALID));
 					}
 					if (element->index == i && element->children[i]->type == UI_MENU_TEXT) {
 						float cursor_size = element->children[i]->h * 0.3f;
@@ -658,8 +658,8 @@ void draw_element(struct ui_element* element) {
 						float cursor_bottom_y = cursor_top_y + cursor_size;
 						float cursor_right_x = cursor_top_x + cursor_size;
 						float cursor_right_y = cursor_top_y + (cursor_size / 2);
-						DrawTriangle((Vector2) {cursor_top_x, cursor_top_y}, (Vector2) {cursor_bottom_x + (int)roundf(element->children[i]->h * 0.05f), cursor_bottom_y + (int)roundf(element->children[i]->h * 0.05f)}, (Vector2) {cursor_right_x, cursor_right_y}, config.theme->colors[COLOR_BACKGROUND]);
-						DrawTriangle((Vector2) {cursor_top_x, cursor_top_y}, (Vector2) {cursor_bottom_x, cursor_bottom_y}, (Vector2) {cursor_right_x, cursor_right_y}, config.theme->colors[COLOR_TEXT]);
+						DrawTriangle((Vector2) {cursor_top_x, cursor_top_y}, (Vector2) {cursor_bottom_x + (int)roundf(element->children[i]->h * 0.05f), cursor_bottom_y + (int)roundf(element->children[i]->h * 0.05f)}, (Vector2) {cursor_right_x, cursor_right_y}, get_color(COLOR_BACKGROUND));
+						DrawTriangle((Vector2) {cursor_top_x, cursor_top_y}, (Vector2) {cursor_bottom_x, cursor_bottom_y}, (Vector2) {cursor_right_x, cursor_right_y}, get_color(COLOR_TEXT));
 					}
 				}
 			}

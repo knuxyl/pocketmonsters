@@ -39,7 +39,7 @@ void main(void)
         loop_audio();
        
 		BeginDrawing();
-		ClearBackground(config.theme->colors[COLOR_BACKGROUND]);
+		ClearBackground(transparent_color(COLOR_BACKGROUND, 128));
 		
         loop_state();
         loop_test();
