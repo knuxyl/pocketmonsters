@@ -30,7 +30,9 @@ static float background_x = 0;
 static float background_y = 0;
 static float background_scale = 1;
 bool show_keyboard = true;
-
+static Image theme_background_image;
+static Texture2D theme_background_texture;
+Vector2 theme_background_position;
 
 void continue_game() {
 	printf("Continue game\n");
@@ -66,11 +68,28 @@ void update_title() {
 	if (IsTextureValid(background_texture)) {
 		UnloadTexture(background_texture);
 	}
+	if (IsImageValid(theme_background_image)) {
+		UnloadImage(theme_background_image);
+	}
+	if (IsTextureValid(theme_background_texture)) {
+		UnloadTexture(theme_background_texture);
+	}
+	theme_background_image = LoadImageFromMemory(".png", backgrounds[config.theme].data, backgrounds[config.theme].len);
+	float scale = window.width / theme_background_image.width;
+	float height = theme_background_image.width * scale;
+	if (height > window.height) {
+		scale = window.height / theme_background_image.height;
+	}
+	scale = window.height / theme_background_image.height;
+	ImageResize(&theme_background_image, (int)(theme_background_image.width * scale), (int)(theme_background_image.height * scale));
+	theme_background_texture = LoadTextureFromImage(theme_background_image);
+	theme_background_position.x = (window.width / 2) - (theme_background_texture.width / 2);
+	theme_background_position.y = (window.height / 2) - (theme_background_texture.height / 2);
+
 	background_image = LoadImageFromMemory(".png", title_background_png, title_background_png_len);
 	background_scale = window.height / background_image.height;
 	ImageResize(&background_image, (int)(background_image.width * background_scale), (int)(background_image.height * background_scale));
 	background_texture = LoadTextureFromImage(background_image);
-	SetTextureFilter(background_texture, TEXTURE_FILTER_POINT);
 	update_element(&logo_element);
 	if (state == 0) {
 		update_element(&pushstart_element);
@@ -93,8 +112,8 @@ void loop_title() {
 	if (background_x + background_texture.width < 0) {
 		background_x = background_x + ((uint)background_x * -1);
 	}
-	
-	
+	DrawTextureEx(theme_background_texture, theme_background_position, 0.0f, 1.0f, (Color) {255, 255, 255, 64});
+	//DrawRectangle(0, 0, window.width, window.height, transparent_color(COLOR_BACKGROUND, 64));
 	draw_element(&logo_element);
 	if (state == 0) {
 		pushstart_timer = pushstart_timer + dt;		
@@ -133,7 +152,10 @@ void loop_title() {
 		}
 	}
 	if (show_keyboard) {
-		input_keyboard();
+		if (input_keyboard()) {
+			show_keyboard = show_keyboard = false;
+			printf("osk.input_string: %s\n", osk.input_string);
+		}
 		draw_keyboard();
 	}
 }
@@ -141,13 +163,23 @@ void loop_title() {
 void init_title() {
 	logo_image = LoadImageFromMemory(".png", logo_png, logo_png_len);
 	logo_child.image = LoadTextureFromImage(logo_image);
-	GenTextureMipmaps(&logo_child.image);
-	SetTextureFilter(logo_child.image, TEXTURE_FILTER_POINT);
+	theme_background_image = LoadImageFromMemory(".png", backgrounds[config.theme].data, backgrounds[config.theme].len);
+	float scale = window.width / theme_background_image.width;
+	float height = theme_background_image.width * scale;
+	if (height > window.height) {
+		scale = window.height / theme_background_image.height;
+	}
+	scale = window.height / theme_background_image.height;
+	ImageResize(&theme_background_image, (int)(theme_background_image.width * scale), (int)(theme_background_image.height * scale));
+	theme_background_texture = LoadTextureFromImage(theme_background_image);
+	theme_background_position.x = (window.width / 2) - (theme_background_texture.width / 2);
+	theme_background_position.y = (window.height / 2) - (theme_background_texture.height / 2);
+	
+	
 	background_image = LoadImageFromMemory(".png", title_background_png, title_background_png_len);
 	background_scale = window.height / background_image.height;
 	ImageResize(&background_image, (int)(background_image.width * background_scale), (int)(background_image.height * background_scale));
 	background_texture = LoadTextureFromImage(background_image);
-	SetTextureFilter(background_texture, TEXTURE_FILTER_POINT);
 	current_state = init_title;
 	play_music(MUSIC_TITLE);
 	loop_state = loop_title;

@@ -250,6 +250,7 @@ void loop_test() {
 		} else {
 			config.theme = 0;
 		}
+		update_state();
 	};
 	if (IsKeyReleased(KEY_G)) {
 		//change_theme(GB_DARK_THEME);
@@ -285,42 +286,42 @@ void loop_test() {
 		    change_card();
         };
 	};
-	if (is_pressed(INPUT_X)) {
-        if (logo_element.v == UI_ACTIVE) {
+	//if (is_pressed(INPUT_X)) {
+        //if (logo_element.v == UI_ACTIVE) {
         		//logo_child.v = UI_HIDDEN;
         		//for (uint8_t i = 0; i < test_element.child_count; i++) {
         			//test_element.children[i]->v = UI_ACTIVE;
         		//}
-        		logo_element.v = UI_HIDDEN;
-        		titlemenu_element.v = UI_DISABLED;
+        		//logo_element.v = UI_HIDDEN;
+        		//titlemenu_element.v = UI_DISABLED;
         		//pushstart_element.v = UI_DISABLED;
         		//titlemenu_element.v = UI_DISABLED;
-        		test_element.v = UI_ACTIVE;
-        	} else {
+        		//test_element.v = UI_ACTIVE;
+        //	} else {
         		//logo_child.v = UI_ACTIVE;
         		//for (uint8_t i = 0; i < test_element.child_count; i++) {
         			//test_element.children[i]->v = UI_HIDDEN;
         		//}
-        		logo_element.v = UI_ACTIVE;
-        		titlemenu_element.v = UI_ACTIVE;
+        		//logo_element.v = UI_ACTIVE;
+        		//titlemenu_element.v = UI_ACTIVE;
         		//pushstart_element.v = UI_ACTIVE;
         		//titlemenu_element.v = UI_ACTIVE;
-        		test_element.v = UI_HIDDEN;
-        	}
-        	update_element(&test_element);
-	};
-	if (is_pressed(INPUT_Y)) {
-        uint8_t prev = test_set;
-		if ((test_set + 1) >= db[test_region]->series[test_series]->set_count) {
-			test_set = 0;
-		} else {
-			test_set++;
-		};
+        		//test_element.v = UI_HIDDEN;
+        //	}
+        	//update_element(&test_element);
+	//};
+	//if (is_pressed(INPUT_Y)) {
+        //uint8_t prev = test_set;
+		//if ((test_set + 1) >= db[test_region]->series[test_series]->set_count) {
+			//test_set = 0;
+		//} else {
+			//test_set++;
+		//};
 		//test_number = 0;
-		if (prev != test_set) {
-            change_card();
-        };
-	};
+		//if (prev != test_set) {
+            //change_card();
+        //};
+	//};
 	input_element(&test_element);
     	draw_element(&test_element);
     draw_test();

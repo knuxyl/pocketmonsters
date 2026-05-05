@@ -1,3 +1,4 @@
+#include "theme/background.c"
 const Color TRANSPARENT = (Color) {0,0,0,0};
 const Color themes[THEMES][THEME_MODES][THEME_COLORS] = {
 	[THEME_MONO] = {

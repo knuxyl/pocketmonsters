@@ -18,10 +18,10 @@ void init() {
 	init_audio();
     init_input();
     init_test();
-    init_title();
     init_font();
     init_mouse();
     init_keyboard();
+    init_title();
 };
 
 void main(void)
@@ -39,10 +39,10 @@ void main(void)
         loop_audio();
        
 		BeginDrawing();
-		ClearBackground(transparent_color(COLOR_BACKGROUND, 128));
+		ClearBackground(get_color(COLOR_BACKGROUND));
 		
         loop_state();
-        loop_test();
+    	loop_test();
         
         loop_mouse();
 		EndDrawing();
